@@ -1,0 +1,56 @@
+{include file="Public/page_header.html"}
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="archives_nav" id="park"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+     
+        <div class="car_info_box">
+       	<h2 class="title_txt">停车场管理</h2>
+        <form id="user_form" class="user_form formular" method="post" action="__URL__/modifyDo">
+        <input type="hidden" name="id" value="{$id}">
+        <div class="list_scroll">
+      		<table border="0" cellspacing="0" cellpadding="0" class="ntable">
+        		<tr>
+        			<th class="width8">名称：</th>
+        			<td><input value="" class="validate[required] inp" type="text" name="data[park_name]" id="park_name" /></td>
+        		</tr>
+        		<tr>
+        			<th>备注：</th>
+        			<td><textarea name="data[park_remark]" id="park_remark" cols="50" rows="3">{$data.park_remark}</textarea></td>
+        		</tr>
+        		<tr>
+        			<th></th>
+        			<td height="80"><input name="" type="image" src="__PUBLIC__/images/tijiao2.jpg" /></td>
+        		</tr>
+        	</table>
+        </div>
+        </form>
+      </div>
+</div>  
+<script>
+{literal}
+	jQuery(document).ready(function(){
+		// binds form submission and fields to the validation engine
+		jQuery("#user_form").validationEngine({ 
+			scroll:false,
+			//binded:false,
+			//showArrow:false,
+			promptPosition:"centerRight",
+			maxErrorsPerField:1,
+			showOneMessage:true,
+			addPromptClass:"formError-noArrow formError-text"
+		});
+{/literal}
+		
+		{foreach from=$data item=v key=k}
+			if($('#'+'{$k}').size() > 0) $('#'+'{$k}').val('{$v}');
+		{/foreach}
+{literal}
+	});
+{/literal}
+</script>
+{include file="Public/page_footer.html"}

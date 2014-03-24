@@ -1,0 +1,356 @@
+{include file="Public/page_header.html"}
+ <div class="right_box">
+       {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul class="control">
+                {foreach from=$doorList item=d}
+                <li class="i_n" sign="door_{$d.door_addr}">{$d.door_name}<br /><span class="door_{$d.door_addr}">检测中</span></li>
+                {/foreach}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        <div class="total">
+			<h3>本班统计</h3>
+			<p><strong>本班应收：</strong><em id="stat_charge"></em>  <strong>本班实收：</strong><em id="stat_real_money"></em></p>
+			<p>总车位数： <span id="stat_park_count"></span> | 空车位数：<span id="stat_left_park_count"></span> | 临时卡：<span id="stat_card_type_counts_1"></span> | 月租卡：<span id="stat_card_type_counts_3"></span> | 储值卡：<span id="stat_card_type_counts_2"></span> | 贵宾卡：<span id="stat_card_type_counts_4"></span></p>
+		</div>
+        <div class="controltab fix">
+        	<h3>出入监控&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="打开监控" class="btn" onclick="openMonitor(this);"></h3>
+        	
+        	{foreach from=$doorList item=door}
+        	{if $door.door_type eq 0}
+        	<input type="hidden" name="" id="door_real_code_{$door.unqiue_sign}" value="" class="inp"  />
+        	<div class="controllist fix">
+	        	<span class="t5">{$door.door_name}【入口】</span> 
+	        	<label for="door_code_{$door.unqiue_sign}">读卡：</label> 
+	        	<input type="text" name="" id="door_code_{$door.unqiue_sign}" value="" class="inp" readonly />
+	        	<label for="door_into_time_{$door.unqiue_sign}">时间：</label>
+	        	<input type="text" name="" id="door_into_time_{$door.unqiue_sign}" size="26" value="" class="inp" readonly />
+	        	<label for="door_car_owner_{$door.unqiue_sign}">车主：</label>
+	        	<input type="text" name="" id="door_car_owner_{$door.unqiue_sign}" size="16" value="" class="inp" readonly />
+	        	{if $isAdministrator}<input type="button" value="入口开闸" class="btn" onclick="_manOpenDoor('{$door.door_addr}','{$door.reader_no}',1,'{$door.door_ip}','{$door.brake_no}');"/>{/if}
+        	</div>
+        	<div class="wline"></div>
+        	
+        	{else}
+        	<input type="hidden" name="" id="door_real_code_{$door.unqiue_sign}" value="" class="inp"  />
+        	<div class="controllist fix">
+        		<span class="t5">{$door.door_name}【出口】</span>
+        		<label for="door_code_{$door.unqiue_sign}">读卡：</label> 
+        		<input type="text" name="" id="door_code_{$door.unqiue_sign}" value="" class="inp" readonly />
+        		<label for="door_into_time_{$door.unqiue_sign}">入场：</label>
+        		<input type="text" name="" id="door_into_time_{$door.unqiue_sign}" size="26" value="" class="inp" readonly />
+        		<label for="door_out_time_{$door.unqiue_sign}">出场：</label>
+        		<input type="text" name="" id="door_out_time_{$door.unqiue_sign}" size="26" value="" class="inp" readonly />
+        		{if $isAdministrator}<input type="button" value="出口开闸" class="btn" onclick="_manOpenDoor('{$door.door_addr}','{$door.reader_no}',1,'{$door.door_ip}','{$door.brake_no}');"/>{/if}
+        	</div>
+        	<div class="controllist controllist2 fix">
+        		<label for="door_park_time_{$door.unqiue_sign}">停车时间：</label>
+        		<input type="text" name="" id="door_park_time_{$door.unqiue_sign}" value="" class="inp" readonly />
+        		<label for="cate_id_{$door.unqiue_sign}">选择车类：</label>
+        		<select name="" id="cate_id_{$door.unqiue_sign}">
+        			{$carCateStr}
+        		</select>
+        		<label for="should_money_{$door.unqiue_sign}">应收车费：</label>
+        		<input type="text" name="" id="should_money_{$door.unqiue_sign}" value="" size="10" class="inp" readonly />
+        		<label for="real_money_{$door.unqiue_sign}">实收车费：</label>
+        		<input type="text" name="" id="real_money_{$door.unqiue_sign}" value="" size="10" class="inp2" />
+        		<input type="button" value="免费放行" class="btn" onclick="manOpenDoor('{$door.door_addr}','{$door.reader_no}',3,'{$door.door_ip}');"/>
+        		<input type="button" value="收费放行" class="btn" onclick="manOpenDoor('{$door.door_addr}','{$door.reader_no}',4,'{$door.door_ip}');"/>
+        	</div>
+        	<div class="wline"></div>
+        	{/if}
+        	
+			{/foreach}
+      	</div>
+      	
+      	
+        <div class="list_scroll mxtab" style="display:none">
+        <h3>实时记录</h3>
+        <table width="94%" border="0" cellspacing="0" cellpadding="0" class="list_table list_table2">
+          <tr class="title_t">
+          	<th>入场时间</th>
+            <th>ID</td>
+            <th>卡片类别</th>
+            <th>有效期</th>
+            <th>卡片余额</th>
+            <th>车牌号码</th>
+            <th>车主姓名</th>
+            <th>车辆类别</th>
+            <th>入口名称</th>
+            <th>入场操作员</th>
+          </tr>
+          <tr>
+            <td>2013/08/09 15:22:30</td>
+            <td>232</td>
+            <td>月租卡</td>
+            <td>2013/11/23</td>
+            <td>-</td>
+            <td>京N723748</td>
+            <td>王大炮</td>
+            <td>车型1</td>
+            <td>1#入口</td>
+            <td>系统</td>
+          </tr>
+        </table>
+        
+        <table width="94%" border="0" cellspacing="0" cellpadding="0" class="list_table list_table2">
+          <tr class="title_t">
+          	<th class="w5">入场时间</th>
+          	<th class="w5">出场时间</th>
+            <th class="w3">ID</td>
+            <th class="w4">卡片类别</th>
+            <th class="w5">有效期</th>
+            <th class="w4">卡片余额</th>
+            <th class="w4">车牌号码</th>
+            <th class="w4">车主姓名</th>
+            <th class="w4">车辆类别</th>
+            <th class="w4">入口名称</th>
+            <th class="w4">出口名称</th>
+            <th class="w5">入场操作员</th>
+            <th class="w5">出场操作员</th>
+            <th class="w4">应收金额</th>
+            <th class="w4">实收金额</th>
+            <th class="w6">停车时间(分钟)</th>
+          </tr>
+          <tr>
+            <td>2013/08/09 15:22:30</td>
+            <td>2013/08/09 16:31:54</td>
+            <td>232</td>
+            <td>月租卡</td>
+            <td>2013/11/23</td>
+            <td>-</td>
+            <td>京N72348</td>
+            <td>王大炮</td>
+            <td>车型1</td>
+            <td>1#入口</td>
+            <td>2#出口</td>
+            <td>系统</td>
+            <td>系统</td>
+            <td>10</td>
+            <td>10</td>
+            <td>240</td>
+          </tr>
+       </table>
+	</div>
+</div>   
+
+
+
+
+
+
+
+<object classid="clsid:F5C7248A-79F7-4866-9836-31227D69570B" codebase="/PSC.cab#version=1,0,0,1" id="px" width="0" height="0" VIEWASTEXT>
+</object>
+<script src="/Public/js/json2.js"></script>
+<script src="/Public/js/monitor.js?v={$v}"></script>
+<script>
+var gangtingPage = 0;
+var doorJson = {$realDoorListJson};
+var port = {$controlData.port};
+var door_addr;
+var door_type;
+var ret;
+var controller_data;
+var control_sign;
+var readerNumber=0;
+var ip;
+var door_addr_readerNo = {$door_addr_readerNo}
+{literal}
+function checkSn()
+{
+	if(doorJson)
+	{
+		$.each(doorJson, function(index, content){ 
+			//$(".inp").val('');
+			controller_data=''; 
+			readerNumber=0;
+			
+			door_addr = parseInt(content.door_addr);
+			ip = content.door_ip;
+			ret =px.getControlInfo(content.door_addr,ip,port);
+			//alert(ret);
+			try{
+				ret = JSON.parse(ret);
+				controller_data = ret.Data;
+			}catch(e)
+			{
+			}
+			control_sign = 'door_'+door_addr;
+			if(ret.ErrorCode==0)
+			{
+				checkTimeInterval=1500;
+				$('.'+control_sign).html('(正常)');
+				$("[sign='"+control_sign+"']").attr('class','i_r'); 
+				//-------------------------------------------------------
+				if(controller_data)
+				{
+					var cardId = controller_data.cardId;//alert(cardId);
+					if(cardId<0) return true;
+					var swipeDate = controller_data.swipeDate;
+					readerNumber = getReaderNumber(cardId,controller_data.status);
+					//--判断该操作是否允许控制-------------------------------------
+					var allow_controll = false;
+					$.each(door_addr_readerNo, function(index, dar){
+						if(dar==(door_addr+'_'+readerNumber)) 
+						{
+							allow_controll = true;
+						}
+					});
+					if(!allow_controll) return true;
+					//-频繁刷卡判断--------------------------------------
+					if(!checkCard(cardId,door_addr,readerNumber,swipeDate)) return true;
+					//-----------------------------------------------
+					
+					var postData={'cardCode':cardId,'readerNo':readerNumber,'doorAddr':door_addr};
+					var serviceReturnData = sendAjax('/Monitor/Ajax/openDoor',postData);
+					if(checkVariable(serviceReturnData.data.park))
+					{
+						//卡片控制器删除
+						var park = serviceReturnData.data.park.split(',');
+						var check_status = serviceReturnData.data.check_status;
+						var card_info = serviceReturnData.data;
+						if (card_info.code.indexOf('-') == -1 && check_status != 0 && (content.park_id == 0 || in_array(content.park_id, park) != -1)) {
+							res = px.addOrModifyPrivilege(content.door_addr, ip, port, content.brake_no, card_info.code, card_info.start_time, card_info.end_time, 0, 123456);
+							res = JSON.parse(res);
+							if (res.ErrorCode != 0)
+							{
+								res = px.addOrModifyPrivilege(content.door_addr, ip, port, content.brake_no, card_info.code, card_info.start_time, card_info.end_time, 0, 123456);
+								res = JSON.parse(res);
+							}
+							if (res.ErrorCode != 0) {
+								alert('删除控制器内卡片信息失败，请重试');
+							}
+						}
+					}
+					
+					
+					var _id = '_'+door_addr+'_'+readerNumber;
+					$('#door_code'+_id).val(cardId);
+					$('#door_real_code'+_id).val(cardId);
+					var is_open_door = true;
+					if(serviceReturnData.code<=0)//请求服务器 返回开门失败
+					{
+						is_open_door = false;
+						//alert(serviceReturnData.msg);
+						if(typeof(serviceReturnData.data.card_type)!='undefined')
+						{
+							if(serviceReturnData.data.card_type!=1 || serviceReturnData.data.door_type==0)
+							{
+								//alert(serviceReturnData.msg);
+							}
+						}else
+						{
+							//alert(serviceReturnData.msg);
+						}
+					}
+					if(checkVariable(serviceReturnData.data.card_type_str) && serviceReturnData.data.card_type_str)
+					{
+						$('#door_code'+_id).val(cardId+"("+serviceReturnData.data.card_type_str+")");
+					}
+						//---表单赋值-------------------------------
+						
+						if($('#door_car_owner'+_id).size()>0)
+						{
+							$('#door_car_owner'+_id).val(serviceReturnData.data.name)
+						}
+						//如果是入场操作
+						/* if(serviceReturnData.data.door_type==0)
+						{
+							$('#door_into_time'+_id).val(swipeDate);
+						}else
+						{ */
+							if(typeof(serviceReturnData.data.sessionData)!='undefined')
+							{
+								if(typeof(serviceReturnData.data.sessionData.start_time)!='undefined')
+								{
+									//入场时间
+									$('#door_into_time'+_id).val(serviceReturnData.data.sessionData.start_time);
+								}
+								
+								if(typeof(serviceReturnData.data.sessionData.end_time)!='undefined')
+								{
+									//入场时间
+									$('#door_out_time'+_id).val(serviceReturnData.data.sessionData.end_time);
+								}
+								//出场时间
+								//if($('#door_out_time'+_id).size()) $('#door_out_time'+_id).val(swipeDate);
+								
+								if(typeof(serviceReturnData.data.sessionData.park_time)!='undefined')
+								{
+									var p_time = serviceReturnData.data.sessionData.park_time;
+									p_time=p_time.replace(/<br>/ig,""); 
+									//停车时间
+									$('#door_park_time'+_id).val(p_time);
+								}
+								if(typeof(serviceReturnData.data.sessionData.cate_id)!='undefined')
+								{
+									//车型
+									$('#cate_id'+_id).val(serviceReturnData.data.sessionData.cate_id);
+								}
+								if(typeof(serviceReturnData.data.sessionData.charge)!='undefined')
+								{
+									//应付
+									$('#should_money'+_id).val(serviceReturnData.data.sessionData.charge);
+								}
+							}else
+							{
+								if(typeof(serviceReturnData.data.door_type)!='undefined' && serviceReturnData.data.door_type==0)
+								{
+									//$('#door_into_time'+_id).val(swipeDate);
+								}
+							}
+						//}
+						if(is_open_door)
+						{
+							//开门操作
+							var physical_door_id = serviceReturnData.data.physical_door_id;
+							var returnData = px.openDoor(door_addr,ip,port,physical_door_id);
+							
+							//记录日志
+							sendAjax('/Monitor/Ajax/addLog',{'function_name':'openDoor','param':door_addr+"-"+ip+"-"+port+"-"+physical_door_id,'return':returnData});
+							returnData = JSON.parse(returnData);
+							if(returnData.ErrorCode==0)//控制器返回开门成功
+							{
+								//清空显示内容
+								clearInput(_id);
+							}else
+							{
+								
+							}
+						}
+					//从控制器中删除数据
+					px.delRecords(door_addr,ip,port,1);
+				}
+			}else
+			{
+				if(checkTimeInterval<20000){
+					checkTimeInterval*=2;					
+				}
+				if(checkTimeInterval>20000){
+					alert('网络异常，请检查后刷新页面！');
+				}
+				$('.'+control_sign).html('(异常)');
+				$("[sign='"+control_sign+"']").attr('class','i_e'); 
+			}
+		}); 
+	}
+	//判断是否允许监控
+	if(monitor_status)
+	{
+		setTimeout('checkSn()',checkTimeInterval);
+	}
+}
+var checkTimeInterval=1500;
+jQuery(document).ready(function(){
+	getStatData();
+	initControllerData(doorJson,port,px);
+	//设备检测
+	//setTimeout('checkSn()',2000);
+	//数据统计
+	setInterval('getStatData()',30000);
+});
+{/literal}
+</script>
+{include file="Public/page_footer.html"}

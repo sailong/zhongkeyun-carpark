@@ -1,0 +1,69 @@
+{include file="Public/page_header.html"}
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="setting_nav" id="fee"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+     
+        <div class="list_scroll">
+        <div class="query">
+        	<a href="__URL__/modify"><img src="__PUBLIC__/images/zengjia.jpg" /></a>
+   	  	</div>
+         <table border="0" cellspacing="0" cellpadding="0" class="list_table">
+          <tr class="title_t">
+            <th class="width_8">车型名称</th>
+            <th class="width_9">免费时间(分钟)</th>
+            <th class="width_9">起始时间(小时)</th>
+            <th class="width_8">起始金额(元)</th>
+            <th class="width_9">后续时间(小时)</th>
+            <th class="width_8">后续金额(元)</th>
+            <th class="width_9">每天最高收费(元)</th>
+            <th>操作</th>
+          </tr>
+           {if $data}
+          {foreach from=$data item=d}
+          <tr>
+            <td>{$d.cate_name}</td>
+            <td>{$d.free_time}</td>
+            <td>{$d.start_time}</td>
+            <td>{$d.start_money}</td>
+            <td>{$d.step_time}</td>
+            <td>{$d.step_money}</td>
+            <td>{$d.max_money}</td>
+            <td><a href="__URL__/modify/id/{$d.fee_id}" class="cz_tag">修改</a> <a href="__URL__/delete/id/{$d.fee_id}" class="cz_tag ask-plain">删除</a></td>
+          </tr>
+          {/foreach}
+          {/if}
+        </table>
+		</div>
+		
+</div>  
+<script>
+{literal}
+jQuery(document).ready(function(){
+	jQuery("#user_form").validationEngine({ 
+		scroll:false,
+		//binded:false,
+		//showArrow:false,
+		promptPosition:"centerRight",
+		maxErrorsPerField:1,
+		showOneMessage:true,
+		addPromptClass:"formError-noArrow formError-text"
+	});
+	$('.ask-plain').click(function(e) {			
+		e.preventDefault();
+		thisHref	= $(this).attr('href');
+		
+		if(confirm('确认删除此条信息吗？')) {
+			window.location = thisHref;
+		}
+		
+	});
+
+});
+{/literal}
+</script>
+{include file="Public/page_footer.html"}

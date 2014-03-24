@@ -1,0 +1,223 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>活动报名</title>
+<link href="__PUBLIC__/css/main.css"  rel="stylesheet" type="text/css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<script type="text/javascript" src="__PUBLIC__/static/js/jquery.js"></script>
+</head>
+<body>
+<div class="do_txt border_3">
+    <div class="prompt">请填写真实信息，以在审核通过后通知您，您的资料将匿名现实在产品说明中，以让更多优秀的单身异性为您而来。</div>
+</div>
+<div class="from">
+<form name=form1 id="form1" method="post" action="/user/register" enctype="multipart/form-data">
+	<ul>
+    	<li><h3>手机号：<span class="red">(必填)</span></h3></li>
+        <li><input name="mobile" id="mobile" type="text" class="input1" value="请输入您的手机号" onfocus="{literal}if (this.value =='请输入您的手机号'){this.value =''}" onblur="if (this.value ==''){this.value='请输入您的手机号'}{/literal}"></li>
+        <li><h3>性别：<span class="red">(必填)</span></h3></li>
+        <li><span class="input2"><input id="sex" name="sex" type="radio" value="1"> 男</span><span class="input2"><input name="sex" type="radio" value="0"> 女</span></li>
+        <li><h3>真实姓名：<span class="gray">(用于提交材料后核实身份)</span><span class="red">(必填)</span></h3></li>
+        <li><input name="name" id="name" type="text" class="input1" value="请输入您的真实姓名" onfocus="{literal}if (this.value =='请输入您的真实姓名'){this.value =''}" onblur="if (this.value ==''){this.value='请输入您的真实姓名'}{/literal}"></li>
+        <li><h3>昵称：<span class="gray">(用于保护隐私)</span><span class="red">(必填)</span></h3></li>
+        <li><input name="nick_name" id="nick_name" type="text" class="input1" value="中文或英文" onfocus="{literal}if (this.value =='中文或英文'){this.value =''}" onblur="if (this.value ==''){this.value='中文或英文'}{/literal}"></li>
+        <li><h3>出生日期：<span class="red">(必填)</span></h3></li>
+        <li>
+        <select name=YYYY id="YYYY" onchange="YYYYMM(this.value)" class="input3">  
+<option value="">年</option>  
+</select>  
+<select name=MM id="MM" onchange="MMDD(this.value)" class="input3">  
+<option value="">月</option>  
+</select>  
+<select name=DD id="DD" class="input3">  
+<option value="">日</option>  
+</select>
+        </li>
+        <li><h3>赤脚身高：<span class="red">(必填)</span></h3></li>
+        <li><select name="height" id="height" class="input4">
+        {section loop=$height_arr name=key}
+        <option value='{$height_arr[key]}'>{$height_arr[key]}厘米</option>
+        {/section}
+        </select></li>
+        <li><h3>体重：</h3></li>
+        <li><select name="weight" id="weight" class="input4">
+        {foreach from=$weight_arr item=weight}
+        <option value='{$weight}'>{$weight}公斤</option>
+        {/foreach}
+        </select></li>
+        <li><h3>学历：<span class="red">(必填)</span></h3></li>
+        <li><select name="edu" id="edu" class="input4">
+        {foreach from=$edu item=e key=k}
+        <option value="{$k}">{$e}</option>
+        {/foreach}
+        </select></li>
+        <li><h3>职业：<span class="red">(必填)</span></h3></li>
+        <li><input name="job" id="job" type="text" class="input1" value="你目前从事的职业" onfocus="{literal}if (this.value =='你目前从事的职业'){this.value =''}" onblur="if (this.value ==''){this.value='你目前从事的职业'}{/literal}"></li>
+        <li><h3>年收入：<span class="red">(必填)</span></h3></li>
+        <li><select name="revenue" id="revenue" class="input4">
+        {foreach from=$revenue item=e key=k}
+        <option value="{$k}">{$e}</option>
+        {/foreach}
+        </select></li>
+        <li><h3>是否已购房：<span class="red">(必填)</span></h3></li>
+        <li><span class="input2"><input name="has_house" id="has_house" type="radio" value="1"> 是</span><span class="input2"><input name="has_house" type="radio" value="0"> 否</span></li>
+    <li><h3>是否已购车：<span class="red">(必填)</span></h3></li>
+        <li><span class="input2"><input name="has_car" id="has_car" type="radio" value="1"> 是</span><span class="input2"><input name="has_car" type="radio" value="0"> 否</span></li>
+    <li><h3>个人照片：<span class="gray">(清晰的生活照活大头照)</span><span class="red">(必填)</span></h3></li>
+        <li><input name="avatar" id="avatar" type="file" class="input5"></li>
+      <li><h3>自我介绍：</h3></li>
+        <li><textarea name="introduce" id="introduce" cols="" rows="5" class="input6"></textarea></li>
+    </ul>
+    </form>
+</div>
+<a href="javascript:validate_form();" class="anniu_x2">下一步</a>
+</body>
+</html>
+{literal}
+<script language="JavaScript">
+function validate_form()
+{
+	var mobile = $("#mobile").val();
+	if (mobile == '请输入您的手机号' || mobile == '') {
+		alert('请输入您的手机号');
+		return;
+	}
+	var sex = $('input[name="sex"]:checked').val();
+	if (sex == undefined) {
+		alert('请选择你的性别');
+		return;
+	}
+	var name = $("#name").val();
+	if (name == '请输入您的真实姓名' || name == '') {
+		alert('请输入您的真实姓名');
+		return;
+	}
+	var nick_name = $("#nick_name").val();
+	if (nick_name == '中文或英文' || nick_name == '') {
+		alert('请输入您的昵称');
+		return;
+	}
+	var YYYY = $("#YYYY").val();
+	if (YYYY == '年' || YYYY == '') {
+		alert('请选择你的出生年月日');
+		return;
+	}
+	var MM = $("#MM").val();
+	if (MM == '月' || MM == '') {
+		alert('请选择你的出生年月日');
+		return;
+	}
+	var DD = $("#DD").val();
+	if (DD == '日' || DD == '') {
+		alert('请选择你的出生年月日');
+		return;
+	}
+	var job = $("#job").val();
+	if (job == '你目前从事的职业' || job == '') {
+		alert('请输入你目前从事的职业');
+		return;
+	}
+	var has_house = $('input[name="has_house"]:checked').val();
+	if (has_house == undefined) {
+		alert('请选择你是否购房');
+		return;
+	}
+	var has_car = $('input[name="has_car"]:checked').val();
+	if (has_car == undefined) {
+		alert('请选择你是否购车');
+		return;
+	}
+	var avatar = $("#avatar").val();
+	if (avatar == '' || changeType(avatar)) {
+		alert('请选择你的头像,你的头像格式仅为jpg/jpeg/png/gif');
+		return;
+	}
+	document.form1.submit();
+}
+
+function changeType(objFile) {
+
+    var objtype=objFile.substring(objFile.lastIndexOf(".")).toLowerCase();
+
+    var fileType=new Array(".jpg",".jpeg",".png",".gif");
+
+    for(var i=0; i<fileType.length; i++){
+
+        if(objtype==fileType[i])
+
+        {
+
+             return false;
+
+             break;
+
+        }
+
+    }
+
+    return true;
+
+}
+
+
+
+window.onload = function(){  
+strYYYY = document.form1.YYYY.outerHTML;  
+strMM = document.form1.MM.outerHTML;  
+strDD = document.form1.DD.outerHTML;  
+MonHead = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];  
+  
+//先给年下拉框赋内容  
+var y = new Date().getFullYear();  
+var str = strYYYY.substring(0, strYYYY.length - 9);  
+for (var i = (y-50); i < (y+5); i++) //以今年为准，前30年，后30年  
+{  
+str += "<option value='" + i + "'> " + i + "</option>\r\n";  
+}  
+document.form1.YYYY.outerHTML = str +"</select>";  
+  
+//赋月份的下拉框  
+var str = strMM.substring(0, strMM.length - 9);  
+for (var i = 1; i < 13; i++)  
+{  
+str += "<option value='" + i + "'> " + i + "</option>\r\n";  
+}  
+document.form1.MM.outerHTML = str +"</select>";  
+  
+document.form1.YYYY.value = y;  
+document.form1.MM.value = new Date().getMonth() + 1;  
+var n = MonHead[new Date().getMonth()];  
+if (new Date().getMonth() ==1 && IsPinYear(YYYYvalue)) n++;  
+writeDay(n); //赋日期下拉框  
+document.form1.DD.value = new Date().getDate();  
+}  
+function YYYYMM(str) //年发生变化时日期发生变化(主要是判断闰平年)  
+{  
+var MMvalue = document.form1.MM.options[document.form1.MM.selectedIndex].value;  
+if (MMvalue == ""){DD.outerHTML = strDD; return;}  
+var n = MonHead[MMvalue - 1];  
+if (MMvalue ==2 && IsPinYear(str)) n++;  
+writeDay(n)  
+}  
+function MMDD(str) //月发生变化时日期联动  
+{  
+var YYYYvalue = document.form1.YYYY.options[document.form1.YYYY.selectedIndex].value;  
+if (str == ""){DD.outerHTML = strDD; return;}  
+var n = MonHead[str - 1];  
+if (str ==2 && IsPinYear(YYYYvalue)) n++;  
+writeDay(n)  
+}  
+function writeDay(n) //据条件写日期的下拉框  
+{  
+var s = strDD.substring(0, strDD.length - 9);  
+for (var i=1; i<(n+1); i++)  
+s += "<option value='" + i + "'> " + i + "</option>\r\n";  
+document.form1.DD.outerHTML = s +"</select>";  
+}  
+function IsPinYear(year)//判断是否闰平年  
+{ return(0 == year%4 && (year%100 !=0 || year%400 == 0))}  
+//-->
+</script>{/literal}

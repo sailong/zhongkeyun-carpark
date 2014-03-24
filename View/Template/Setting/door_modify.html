@@ -1,0 +1,152 @@
+{include file="Public/page_header.html"}
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="setting_nav" id="door"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+     
+
+        <div class="car_info_box">
+       	<h2 class="title_txt">控制器参数</h2>
+         <form id="user_form" class="user_form formular" method="post" action="__URL__/modifyDo">
+        <input type="hidden" name="id" value="{$id}">
+        <div class="list_scroll">
+      	 <table border="0" cellspacing="0" cellpadding="0" class="controller">
+      	 <tr>
+            <td>入口控制器名称</td>
+            <td><input value="{$data.door_name}" class="validate[required] text-input" type="text" name="data[door_name]" id="door_name"></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>车库</td>
+            <td>
+            <select name="data[park_id]" id="park_id" style="width:129px; height:24px;">
+	            <option value="0" {if ($data.park_id == 0)} selected {/if}>小区大门</option>
+	            {foreach from=$park_info item=park}
+	            <option value="{$park.park_id}" {if ($data.park_id == $park.park_id)} selected {/if}>{$park.park_name}</option>
+	            {/foreach}
+            </select>
+            </td>
+            <td></td>
+          </tr>
+          
+           <tr>
+            <td>控制器类型</td>
+            <td>
+            <select name="data[door_type]" id="door_type" style="width:129px; height:24px;">
+	            <option value="0"  {if ($data.door_type == 0)} selected {/if}>入口</option>
+	            <option value="1"  {if ($data.door_type == 1)} selected {/if}>出口</option>
+            </select>
+            </td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>控制器地址</td>
+            <td><input value="{$data.door_addr}" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="data[door_addr]" id="door_addr"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>控制器IP地址</td>
+            <td><input value="192.168.3." class="validate[required,custom[ipv4]] text-input" type="text" name="data[door_ip]" id="door_ip"></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>门号</td>
+            <td><input value="" class="validate[required] text-input" type="text" name="data[door_no]" id="door_no" ></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>门岗电脑mac地址</td>
+            <td><input value="" class="validate[required,text-input] text-input" type="text" name="data[mac]" id="mac"></td>
+            <td style="text-align:left;">格式如：08:00:27:15:90:EF</td>
+          </tr>
+          
+          <tr>
+            <td>闸序号</td>
+            <td><input value="" class="validate[required] text-input" type="text" name="data[brake_no]" id="brake_no"></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>读卡器序号</td>
+            <td><input value="" class="validate[required] text-input" type="text" name="data[reader_no]" id="reader_no"></td>
+            <td style="text-align:left;"><!-- 多个读卡器序号间用,隔开 如:4,5,6 --></td>
+          </tr>
+          
+          
+           <tr>
+            <td>LED IP地址</td>
+            <td><input value="192.168.3." class="text-input" type="text" name="data[led_ip]" id="led_ip"></td>
+            <td></td>
+          </tr>
+          
+          <tr>
+            <td>车道名称</td>
+            <td><input value="" class="text-input" type="text" name="data[lane]" id="lane"></td>
+            <td></td>
+          </tr>
+           <tr>
+            <td>是否显示剩余车位</td>
+            <td>
+            <select name="data[show_left_parking]" id="show_left_parking" style="width:129px; height:24px;">
+	            <option value="0"  {if ($data.show_left_parking == 0)} selected {/if}>否</option>
+	            <option value="1"  {if ($data.show_left_parking == 1)} selected {/if}>是</option>
+            </select>
+            </td>
+            <td></td>
+          </tr>
+        </table>
+        
+        </div>
+		<div class="jbsz_tj"><input name="" type="image" src="__PUBLIC__/images/tijiao2.jpg" id="submit"/></div>
+        </form>
+      </div>
+</div>  
+<object classid="clsid:F5C7248A-79F7-4866-9836-31227D69570B" codebase="/PSC.cab#version=1,0,0,1" id="px" width="0" height="0" VIEWASTEXT>
+</object>
+<script src="/Public/js/json2.js"></script>
+<script>
+var mask = '{$controlData.mask}';
+var gateway = '{$controlData.gateway}';
+var port = {$controlData.port};
+{literal}
+	jQuery(document).ready(function(){
+		// binds form submission and fields to the validation engine
+		jQuery("#user_form").validationEngine({ 
+			scroll:false,
+			//binded:false,
+			//showArrow:false,
+			promptPosition:"centerRight",
+			maxErrorsPerField:1,
+			showOneMessage:true,
+			addPromptClass:"formError-noArrow formError-text",
+			onValidationComplete:function(){
+				return true;
+				$('#submit').attr('disabled','disabled');
+				var door_addr = parseInt($('#door_addr').val());
+				var ip = $.trim($('#door_ip').val());
+				var ret = px.setControlIP(door_addr,ip,port,mask,gateway);
+				ret = JSON.parse(ret);
+				if(ret.ErrorCode!=0)
+				{
+					alert('系统设置控制器ip地址失败！');
+					$('#submit').removeAttr('disabled');
+					return false;
+				}
+				return true;
+			}
+		});
+{/literal}
+		
+		{foreach from=$data item=v key=k}
+			if($('#'+'{$k}').size() > 0) $('#'+'{$k}').val('{$v}');
+		{/foreach}
+{literal}
+	});
+{/literal}
+</script>
+{include file="Public/page_footer.html"}

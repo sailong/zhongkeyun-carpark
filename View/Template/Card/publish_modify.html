@@ -1,0 +1,172 @@
+{include file="Public/page_header.html"}
+<script src="__PUBLIC__/js/My97DatePicker/WdatePicker.js"></script>
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="sub_nav" id="publish"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+     
+        <div class="car_info_box">
+       	<h2 class="title_txt">{if !empty($id)}修改卡片{else}新增卡片{/if}</h2>
+        <form id="user_form" class="user_form formular" method="post" action="__URL__/modifyDo">
+        <input type="hidden" name="id" value="{$id}">
+      		<table border="0" cellspacing="0" cellpadding="0" class="ntable">
+        		<tr>
+        			<th class="width8">卡片内码：</th>
+        			<td colspan="5"><input value="{$data.code}" class="validate[required,custom[onlyNumberSp]] inp" size="40" type="text" name="data[code]" id="code" {if !empty($id)} disabled="disabled" {/if}/> (请刷卡输入)</td>
+        		</tr>
+        		<tr>
+        			<th class="width8">卡片类别：</th>
+        			<td>
+        				<select name="data[card_type]" id="card_type" {if !empty($id)}disabled="disabled"{/if}>
+        					{foreach from=$cardCategoryList item=v key=k}
+        						<option value="{$k}" {if !empty($data) && $data.card_type eq $k} selected="selected" {/if}>{$v}</option>
+        					{/foreach}
+        				</select>
+        			</td>
+        			<th class="width8">有效期：</th>
+        			<td><input id="cdate" class="inp Wdate" type="text" name="data[expire_time]" onClick="WdatePicker()" disabled="disabled" {if !empty($id) && isset($data.format_expire_time)} value="{$data.format_expire_time}Z" disabled="disabled" exist="exist"{/if}/></td>
+        			<th class="width8">卡片余额：</th>
+        			<td><input {if !empty($id) } value="{$data.money}" disabled="disabled"{/if} class="validate[custom[onlyNumberSp]] inp" type="text" name="data[money]" id="money"/></td>
+        		</tr>
+        		<tr>
+        			<th>车辆类型：</th>
+        			<td>
+        			<select name="data[cate_id]" id="cate_id">
+            		{foreach from=$carCategoryList item=cate}
+            			<option value="{$cate.cate_id}" {if !empty($data) && $data.cate_id eq $cate.cate_id} selected="selected" {/if}>{$cate.cate_name}</option>
+            		{/foreach}
+            	</select>
+        			</td>
+        			<th>车牌号码：</th>
+        			<td><input value="{$data.car_code}" class="inp" type="text" name="data[car_code]" id="car_code"/></td>
+        			<th>车辆型号：</th>
+        			<td><input value="{$data.car_type}" class="inp" type="text" name="data[car_type]" id="car_type"/></td>
+        		</tr>
+        		<tr>
+        			<th>车辆颜色：</th>
+        			<td><input value="{$data.car_color}" class="inp" type="text" name="data[car_color]" id="car_color"/></td>
+        			<th>车主姓名：</th>
+        			<td><input value="{$data.name}" class="inp" type="text" name="data[name]" id="name"/></td>
+        			<th>身份证号：</th>
+        			<td><input value="{$data.person_id}" class="inp" type="text" name="data[person_id]" id="person_id"/></td>
+        		</tr>
+        		<tr>
+        			<th>联系电话：</th>
+        			<td><input value="{$data.tel}" class="inp" type="text" name="data[tel]" id="tel"/></td>
+        			<th>联系地址：</th>
+        			<td colspan="3"><input value="{$data.address}" class="inp" type="text" size="60" name="data[address]" id="address" {if !empty($id)} disabled="disabled" {/if} /></td>
+        		</tr>
+        		<tr>
+        			<th>所属车位：</th>
+        			<td><input value="{$data.parking}" class="inp" type="text" name="data[parking]" id="parking" /></td>
+        			<th>付款金额：</th>
+        			<td><input value="{$data.charge}" class="inp" type="text" name="data[charge]" /></td>
+        			<th>备注：</th>
+        			<td><input value="{$data.note}" class="inp" type="text" name="data[note]" /></td>
+        		</tr>
+        		<tr>
+        			<th>可停放车场：</th>
+        			<td colspan="5">
+	        			{foreach from=$parkCategoryList item=cate}
+	        				<input type="checkbox" name="data[park][]" class="" value="{$cate.park_id}" {if !empty($data) && in_array($cate.park_id,$data.park)} checked="checked" {/if} park_sign='park'><label>{$cate.park_name}</label>
+	            		{/foreach}
+        			</td>
+        		</tr>
+        		<tr>
+        			<th></th>
+        			<td height="80" colspan="5"><input name="" type="image" src="__PUBLIC__/images/tijiao2.jpg" /></td>
+        		</tr>
+        	</table>
+        </form>
+      </div>
+</div>  
+<script>
+var id = '{$id}';
+{literal}
+	jQuery(document).ready(function(){
+		jQuery("#user_form").validationEngine({ 
+			scroll:false,
+			//binded:false,
+			//showArrow:false,
+			promptPosition:"centerRight",
+			maxErrorsPerField:1,
+			showOneMessage:true,
+			addPromptClass:"formError-noArrow formError-text"
+		});
+		$('#code').focus();
+		
+		$("input[name='data[code]']").keypress(function(e) {
+            var key = window.event?e.keyCode:e.which;
+             if(key.toString() == "13"){
+            	 if(e.preventDefault){
+            		 e.preventDefault(); //除IE6-8之外的浏览器(包括IE9)
+            	 }else{
+            		 e.returnValue = false; //IE6-8
+            	 }
+            	 
+                 var code = $(this).val();
+             	 $.get('__URL__/checkExist',{code:code},function(data){
+             		 if(data.status !=1)
+             		{
+             			 alert('该卡已经存在了');
+             		}
+             	 },'json');
+             	return false;
+             }
+     	});
+	
+		if($(this).find("[exist=exist]").length==0)
+		{
+			$("#card_type").change(function(){
+				changeCheck($(this).val());
+				if($(this).val()==1 || $(this).val()==2){
+					$("#cdate").attr("disabled","disabled");
+				}else{
+					$("#cdate").removeAttr("disabled");
+				}
+			});
+		}else
+		{
+			$("#card_type").change(function(){
+				changeCheck($(this).val());
+			});
+		}
+		
+		var card_type = $('#card_type').val();
+		changeCheck(card_type);
+		
+	});
+	
+function changeCheck(card_type)
+{
+	if(card_type == 1 || card_type == 4)
+	{
+		$('#name,#address,#money,#parking,#cdate').attr('class','inp');
+		$("#cdate,#money").removeAttr("disabled");
+	}else if(card_type==2)
+	{
+		$('#name,#address,#money').attr('class','validate[required] inp');
+		$("#money").removeAttr("disabled");
+		$("#cdate").attr("disabled","disabled");
+		$("#cdate").val('');
+	}else if(card_type==3)
+	{
+		$('#name,#address,#parking').attr('class','validate[required] inp');
+		$('#cdate').attr('class','validate[required] inp Wdate');
+		$("#money").attr("disabled","disabled");
+		$("#money").val(0);
+		
+		$("[park_sign='park']").attr('class','validate[required]');
+	}
+	if(card_type!=3) $("[park_sign='park']").removeAttr('class');
+	
+	if(id) { $("#money").attr("disabled","disabled");}
+	
+}
+{/literal}
+</script>
+{include file="Public/page_footer.html"}

@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/css.css" />
+<script src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
+<title>无标题文档</title>
+</head>
+
+<body class="index_body">
+<div class="left_box">
+	<div class="time"></div>
+    <ul>
+    	<li><a href="/Setting/Setting" target="right"><img src="__PUBLIC__/images/left_img1.jpg" /><span class="left_a"></span></a></li>
+        <li><a href="/Archives/Group" target="right"><img src="__PUBLIC__/images/left_img2.jpg" /></a></li>
+        <li><a href="/Card" target="right"><img src="__PUBLIC__/images/left_img3.jpg" /></a></li>
+        <li><a href="/Monitor" target="right"><img src="__PUBLIC__/images/left_img4.jpg" /></a></li>
+        <li><a href="/Log" target="right"><img src="__PUBLIC__/images/left_img5.jpg" /></a></li>
+        <li><a href="/report" target="right"><img src="__PUBLIC__/images/left_img6.jpg" /></a></li>
+        <!-- <li><a href="#"><img src="__PUBLIC__/images/left_img7.jpg" /></a></li> -->
+    </ul>
+</div>
+<script>
+{literal}
+//时间
+function currentTime(){
+var d = new Date(),str = '';
+ str += d.getFullYear()+'年';
+ str  += d.getMonth() + 1+'月';
+ str  += d.getDate()+'日 ';
+ str += d.getHours()+'时'; 
+ str  += d.getMinutes()+'分'; 
+str+= d.getSeconds()+'秒'; 
+return str;
+}
+$(function(){
+	$("li").click(function(){
+		$("li span").remove();  
+		$(this).append('<span class="left_a"></span>');
+		});
+	
+	setInterval(function(){$('.time').html(currentTime)},1000);
+});
+{/literal}
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+{include file="Public/page_header.html"}
+<script src="__PUBLIC__/js/My97DatePicker/WdatePicker.js"></script>
+
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+                {insert name="sub_nav" id="on"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        <div class="query">
+        <div class="searchbox">
+        	<form id="user_form1" class="user_form formular" method="post">
+        	<input type="hidden" name="form1"/>
+        		<span class="searchtit">查询：</span>
+		    	<select name="type" id="type">
+		    		<option value="0">请选择</option>
+		    		<option value="1">卡片ID</option>
+		    		<option value="2">卡片类型</option>
+		    		<option value="3">车牌号码</option>
+		    		<option value="4">车主姓名</option>
+		    		<option value="5">入场日期</option>
+		    	</select>
+		        <input name="str" type="text" class="validate[required] inp"/>
+		        <input name="" type="image" src="__PUBLIC__/images/tijiao1.jpg" />
+		    </form>
+		    </div>
+        	<div class="searchbox">
+        	<form id="user_form2" class="user_form formular" method="get">
+        		 <span class="searchtit">高级查询：</span>
+		                         入场操作员：<select name="admin_id" id="admin_id">
+						<option value="0">请选择操作员</option>
+						{foreach from=$adminList item=admin}
+							<option value="{$admin.admin_id}">{$admin.admin_name}</option>
+						{/foreach}
+					 </select>
+				入场起始时间：<input type="text" size="24" class="Wdate" {literal}onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'%y-%M-%d'})"{/literal} name="start_time" value="{$start_time}"/>
+				入场截止时间：<input type="text" size="24" class="Wdate" {literal}onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'%y-%M-%d'})" {/literal} name="end_time" value="{$end_time}"/>
+		        <input name="s2" type="image" src="__PUBLIC__/images/tijiao1.jpg" />
+		    </form>
+		    </div>
+    	</div>
+        <div class="list_scroll">
+        
+        <table border="0" cellspacing="0" cellpadding="0" class="list_table list_table3">
+          <tr class="title_t">
+            <th class="width_2">入场时间</th>
+            <th class="width_1">卡片编号</th>
+            <th class="width_1">卡片类别</th>
+            <th class="width_1">有效期限</th>
+            <th class="width_1">卡片余额</th>
+            <th class="width_1">车主姓名</th>
+            <th class="width_1">车牌号码</th>
+            <th class="width_1">车辆类别</th>
+            <th class="width_1">车辆型号</th>
+            <th class="width_1">车辆颜色</th>
+            <th class="width_1">身份证号</th>
+            <th class="width_1">联系电话</th>
+            <th class="width_1">联系地址</th>
+            <th class="width_1">所属车位</th>
+            <th class="width_1">入口名称</th>
+            <th class="width_1">入场操作员</th>
+            <th class="width_1">入场开闸方式</th>
+          </tr>
+          {foreach from=$list item=session}
+	          <tr>
+	            <td>{$session.start_time_str}</td>
+	            <td>{$session.card_id}</td>
+	            <td>{$session.card_type_name}</td>
+	            <td>{if $session.expire_time > 0}{$session.expire_time_str}{/if}</td>
+	            <td>{$session.money}</td>
+	            <td>{$session.name}</td>
+	            <td>{$session.car_code}</td>
+	            <td>{$session.cate_name}</td>
+	            <td>{$session.car_type}</td>
+	            <td>{$session.car_color}</td>
+	            <td>{$session.person_id}</td>
+	            <td>{$session.tel}</td>
+	            <td>{$session.address}</td>
+	            <td>{$session.parking}</td>
+	            <td>{$session.start_door_name}</td>
+	            <td>{$session.admin_name}</td>
+	            <td>{if $session.start_status > 0} 手工 {else} 自动 {/if}</td>
+	            
+	          </tr>
+          {/foreach}
+        </table>
+        
+</div>
+{if $list}
+	<div class="yema">
+        	{if !empty($paging)}
+        		{$paging}
+        	{/if}
+     </div>
+{/if}
+</div>
+
+<script>
+var admin_id = '{$admin_id}';
+{literal}
+jQuery(document).ready(function(){
+	$('#admin_id').val(admin_id);
+	
+	
+	jQuery("#user_form1,#user_form2").validationEngine({ 
+		scroll:false,
+		//binded:false,
+		//showArrow:false,
+		promptPosition:"centerRight",
+		maxErrorsPerField:1,
+		showOneMessage:true,
+		addPromptClass:"formError-noArrow formError-text"
+	});
+	
+});
+{/literal}
+</script>

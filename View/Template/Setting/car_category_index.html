@@ -1,0 +1,59 @@
+{include file="Public/page_header.html"}
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="setting_nav" id="CarCategory"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        
+        <div class="list_scroll">
+        <div class="query">
+        	<a href="__URL__/modify"><img src="__PUBLIC__/images/zengjia.jpg" /></a>
+   	  	</div>
+        <table width="94%" border="0" cellspacing="0" cellpadding="0" class="list_table">
+          <tr class="title_t">
+          	<th width="15%">编号</th>
+            <th>名称</td>
+            <th width="20%">操作</th>
+          </tr>
+          {if $data}
+          {foreach from=$data item=d}
+          <tr>
+            <td>{$d.cate_id}</td>
+            <td>{$d.cate_name}</td>
+            <td><a href="__URL__/modify/id/{$d.cate_id}" class="cz_tag">修改</a> <a href="__URL__/delete/id/{$d.cate_id}" class="cz_tag ask-plain">删除</a></td>
+          </tr>
+          {/foreach}
+          {/if}
+        </table>
+		</div>
+		
+</div>  
+<script>
+{literal}
+jQuery(document).ready(function(){
+	jQuery("#user_form").validationEngine({ 
+		scroll:false,
+		//binded:false,
+		//showArrow:false,
+		promptPosition:"centerRight",
+		maxErrorsPerField:1,
+		showOneMessage:true,
+		addPromptClass:"formError-noArrow formError-text"
+	});
+	$('.ask-plain').click(function(e) {			
+		e.preventDefault();
+		thisHref	= $(this).attr('href');
+		
+		if(confirm('确认删除此条信息吗？')) {
+			window.location = thisHref;
+		}
+		
+	});
+
+});
+{/literal}
+</script>
+{include file="Public/page_footer.html"}

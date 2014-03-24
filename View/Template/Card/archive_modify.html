@@ -1,0 +1,109 @@
+{include file="Public/page_header.html"}
+ <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+              {insert name="sub_nav" id="archive"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+         <div class="car_info_box">
+        <h2 class="title_txt">卡片档案</h2>
+        <form id="user_form" class="user_form formular" method="post" action="__URL__/modify">
+        	<input type="hidden" name="data[card_id]" value="{$data.card_id}">
+        	<table border="0" cellspacing="0" cellpadding="0" class="ntable">
+        		<tr>
+        			<th class="width8">卡片内码：</th>
+        			<td colspan="4"><input value="{$data.code}" class="inp" size="40" type="text" name="data[code]" disabled="disabled" /> &nbsp;&nbsp; <strong>发行日期：</strong>{$data.add_time}</td>
+        		</tr>
+        		<tr>
+        			<th class="width8">卡片类别：</th>
+        			<td><select name="data[card_type]" id="card_type" disabled="disabled">
+        					{foreach from=$cardCategoryList item=v key=k}
+        						<option value="{$k}" {if !empty($data) && $data.card_type eq $k} selected="selected" {/if}>{$v}</option>
+        					{/foreach}
+        				</select></td>
+        			<th class="width8">有效期：</th>
+        			<td><input value="{$data.format_expire_time}" class="inp" type="text" name="data[expire_time]" disabled="disabled" /></td>
+        			<th class="width8">卡片余额：</th>
+        			<td><input value="{$data.money}" class="inp" type="text" name="data[money]" disabled="disabled" /></td>
+        		</tr>
+        		<tr>
+        			<th>车辆类型：</th>
+        			<td>
+        			<select name="data[cate_id]" id="cate_id">
+            		{foreach from=$carCategoryList item=cate}
+            			<option value="{$cate.cate_id}" {if !empty($data) && $data.cate_id eq $cate.cate_id} selected="selected" {/if}>{$cate.cate_name}</option>
+            		{/foreach}
+            	</select>
+        			
+        			</td>
+        			<th>车牌号码：</th>
+        			<td><input value="{$data.car_code}" class="inp" type="text" name="data[car_code]" /></td>
+        			<th>车辆型号：</th>
+        			<td><input value="{$data.car_type}" class="inp" type="text" name="data[car_type]" /></td>
+        		</tr>
+        		<tr>
+        			<th>车辆颜色：</th>
+        			<td><input value="{$data.car_color}" class="inp" type="text" name="data[car_color]" /></td>
+        			<th>车主姓名：</th>
+        			<td><input value="{$data.name}" class="inp" type="text" name="data[name]" /></td>
+        			<th>身份证号：</th>
+        			<td><input value="{$data.person_id}" class="inp" type="text" name="data[person_id]" /></td>
+        		</tr>
+        		<tr>
+        			<th>联系电话：</th>
+        			<td><input value="{$data.tel}" class="inp" type="text" name="data[tel]" /></td>
+        			<th>联系地址：</th>
+        			<td colspan="3"><input value="{$data.address}" class="inp" type="text" size="60" name="data[address]" id="address" readonly="readonly"/></td>
+        		</tr>
+        		<tr>
+        			<th>所属车位：</th>
+        			<td><input value="{$data.parking}" class="inp" type="text" name="data[parking]" /></td>
+        			<th></th>
+        			<td colspan="3"></td>
+        		</tr>
+        		<tr>
+        			<th>可停放车场：</th>
+        			<td colspan="5">
+        				{foreach from=$parkCategoryList item=cate}
+	        				<input type="checkbox" disabled="disabled" name="data[park][]" class="validate[required]" value="{$cate.park_id}" {if !empty($data) && in_array($cate.park_id,$data.park)} checked="checked" {/if}><label>{$cate.park_name}</label>
+	            		{/foreach}
+        			</td>
+        		</tr>
+        		<tr>
+        			<th>备注：</th>
+        			<td colspan="5">
+        				<input value="{$data.note}" class="inp" size="80" type="text" name="data[note]"/>
+        			</td>
+        		</tr>
+        		<tr>
+        			<th></th>
+        			<td height="80" colspan="5"><input name="" type="image" src="__PUBLIC__/images/tijiao2.jpg" /></td>
+        		</tr>
+        	</table>
+        </form>
+		</div>
+ </div>
+ 
+
+ <script>
+ var card_type = '{$data.card_type}';
+ var is_master = '{$data.is_master}';
+ {literal}
+jQuery(document).ready(function(){
+	jQuery("#user_form").validationEngine({ 
+		scroll:false,
+		//binded:false,
+		//showArrow:false,
+		promptPosition:"centerRight",
+		maxErrorsPerField:1,
+		showOneMessage:true,
+		addPromptClass:"formError-noArrow formError-text"
+	});
+});
+{/literal}
+</script>
+
+ 
+ {include file="Public/page_footer.html"}

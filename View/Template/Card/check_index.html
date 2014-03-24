@@ -1,0 +1,92 @@
+{include file="Public/page_header.html"}
+ <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="sub_nav" id="check"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+		<div class="car_info_box">
+        <form id="user_form" class="user_form formular" method="post">
+        	<p class="cxp">请刷卡查询：
+        	<input type="text" class="validate[required,custom[onlyNumberSp]] inp" id="code" name="data[code]"/> 
+        	<input type="image" src="__PUBLIC__/images/cx.jpg" /></p>
+        </form>
+        {if !empty($data)}
+	        <h2 class="tabtxt">卡片信息</h2>
+	        <table border="0" cellspacing="0" cellpadding="0" class="ntable">
+	    		<tr>
+	    			<th class="width8">卡片编号：</th>
+	    			<td>{$data.card_id}</td>
+	    			<th class="width8">卡片类别：</th>
+	    			<td>{$data.format_card_type}</td>
+	    			<th class="width8">有效期限：</th>
+	    			<td>{$data.format_expire_time}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>卡片余额：</th>
+	    			<td>{$data.money}</td>
+	    			<th>车牌号码：</th>
+	    			<td>{$data.car_code}</td>
+	    			<th>车辆类型：</th>
+	    			<td>{$data.cate_name}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>车辆型号：</th>
+	    			<td>{$data.car_type}</td>
+	    			<th>车辆颜色：</th>
+	    			<td>{$data.car_color}</td>
+	    			<th>车主姓名：</th>
+	    			<td>{$data.name}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>身份证号：</th>
+	    			<td>{$data.person_id}</td>
+	    			<th>联系地址：</th>
+	    			<td>{$data.address}</td>
+	    			<th>联系电话：</th>
+	    			<td>{$data.tel}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>卡片内码：</th>
+	    			<td>{$data.code}</td>
+	    			<th>发卡日期：</th>
+	    			<td>{$data.format_add_time}</td>
+	    			<th>卡片备注：</th>
+	    			<td>{$data.remark}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>是否挂失：</th>
+	    			<td>{if $lossReport}是{else}否{/if}</td>
+	    			<th>所属车位：</th>
+	    			<td>{$data.parking}</td>
+	    			<th>是否入场：</th>
+	    			<td>{if $session}是{else}否{/if}</td>
+	    		</tr>
+	    		<tr>
+	    			<th>入场时间：</th>
+	    			<td>{if $session}{$session.start_time}{/if}</td>
+	    			<th>出场时间：</th>
+	    			<td>{if $session}{$session.end_time}{/if}</td>
+	    			<th></th>
+	    			<td></td>
+	    		</tr>
+	    		<tr>
+	    			<th>可停放车场：</th>
+	    			<td colspan="5">{$data.park}</td>
+	    		</tr>
+	    	</table>
+    	{/if}
+		</div>
+
+<script>
+{literal}
+jQuery(document).ready(function(){
+	// 按时间搜索时显示时间插件
+	$("#code").focus();
+});
+{/literal}
+</script>
+
+{include file="Public/page_footer.html"}

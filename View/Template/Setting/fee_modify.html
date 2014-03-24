@@ -1,0 +1,78 @@
+{include file="Public/page_header.html"}
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="setting_nav" id="fee"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+     
+       <form id="user_form" class="user_form formular" method="post" action="__URL__/modifyDo">
+       <input type="hidden" name="id" value="{$id}">
+      <div class="car_info_box">
+       	<h2 class="title_txt">设置收费</h2>
+      	 <table border="0" cellspacing="0" cellpadding="0" class="controller">
+          <tr>
+            <td>车型</td>
+            <td><div style="float:left;margin-left: 3px">
+            	<select name="data[cate_id]" id="cate_id">
+            		{foreach from=$carCategoryList item=cate}
+            		<option value="{$cate.cate_id}">{$cate.cate_name}</option>
+            		{/foreach}
+            	</select></div></td>
+          </tr>
+          <tr>
+            <td>免费时间(分钟)</td>
+            <td><input value="" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="data[free_time]" id="free_time"></td>
+          </tr>
+          <tr>
+            <td>起始时间(小时)</td>
+            <td><input value="" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="data[start_time]" id="start_time"></td>
+          </tr>
+          <tr>
+            <td>起始金额(元)</td>
+            <td><input value="" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="data[start_money]" id="start_money"></td>
+          </tr>
+          <tr>
+            <td>后续时间(小时)</td>
+            <td><input value="" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="data[step_time]" id="step_time"></td>
+          </tr>
+          <tr>
+            <td>后续金额(元)</td>
+            <td><input value="" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="data[step_money]" id="step_money"></td>
+          </tr>
+          <tr>
+            <td>每天最高收费(元)</td>
+            <td><input value="" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="data[max_money]" id="max_money"></td>
+          </tr>
+        </table>
+		<div class="jbsz_tj"><input name="" type="image" src="__PUBLIC__/images/tijiao2.jpg" /></div>
+      </div>
+      </form>
+		
+</div>  
+<script>
+{literal}
+jQuery(document).ready(function(){
+	// binds form submission and fields to the validation engine
+	jQuery("#user_form").validationEngine({ 
+		scroll:false,
+		//binded:false,
+		//showArrow:false,
+		promptPosition:"centerRight",
+		maxErrorsPerField:1,
+		showOneMessage:true,
+		addPromptClass:"formError-noArrow formError-text"
+	});
+	{/literal}
+	
+	{foreach from=$data item=v key=k}
+		if($('#'+'{$k}').size() > 0) $('#'+'{$k}').val('{$v}');
+	{/foreach}
+	
+{literal}
+});
+{/literal}
+</script>
+{include file="Public/page_footer.html"}

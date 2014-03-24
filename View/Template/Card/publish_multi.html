@@ -1,0 +1,92 @@
+{include file="Public/page_header.html"}
+<script src="__PUBLIC__/js/My97DatePicker/WdatePicker.js"></script>
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="sub_nav" id="publish"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        
+	<div class="car_info_box">
+        <h2 class="title_txt">卡片批量发行</h2>
+        <form id="user_form" class="user_form formular" method="post" action="__URL__/addMulti">
+        	<table border="0" cellspacing="0" cellpadding="0" class="ntable">
+        		<tr>
+        			<th class="width8">卡片内码：</th>
+        			<td><input class="validate[required,custom[onlyNumberSp]] inp" type="text" name="data[code]" id="code"/></td>
+        			<th class="width8">卡片类型：</th>
+        			<td>
+        				<select name="data[card_type]" id="card_type">
+        					{foreach from=$cardCategoryList item=v key=k}
+        						<option value="{$k}" {if !empty($data) && $data.card_type eq $k} selected="selected" {/if}>{$v}</option>
+        					{/foreach}
+        				</select>
+        			</td>
+        		</tr>
+        		<tr>
+        			<th>车辆类型：</th>
+        			<td>
+        			<select name="data[cate_id]" id="cate_id">
+            		{foreach from=$carCategoryList item=cate}
+            			<option value="{$cate.cate_id}" {if !empty($data) && $data.cate_id eq $cate.cate_id} selected="selected" {/if}>{$cate.cate_name}</option>
+            		{/foreach}
+            	</select>
+					</td>
+        			<th>有效期：</th>
+        			<td><input id="cdate" class="inp Wdate" type="text" name="data[expire_time]" onClick="WdatePicker()" {if isset($data.expire_time)} value="{$data.expire_time}" {/if}/></td>
+        			<th>卡片余额：</th>
+        			<td><input value="{$data.money}" class="validate[custom[onlyNumberSp]] inp" type="text" name="data[money]" /></td>
+        		</tr>
+        		<tr>
+        			<th>可停放车场：</th>
+        			<td colspan="5">
+        				{foreach from=$parkCategoryList item=cate}
+	        				<input type="checkbox" name="data[park][]" class="validate[required]" value="{$cate.park_id}" {if !empty($data) && in_array($cate.park_id,$data.park)} checked="checked" {/if}><label>{$cate.park_name}</label>
+	            		{/foreach}
+        			</td>
+        		</tr>
+        		<tr>
+        			<th></th>
+        			<td height="80" colspan="5"><input name="" type="image" src="__PUBLIC__/images/tijiao2.jpg" /></td>
+        		</tr>
+        	</table>
+		</form>
+	</div>
+	
+	<script>
+{literal}
+	jQuery(document).ready(function(){
+		jQuery("#user_form").validationEngine({ 
+			scroll:false,
+			//binded:false,
+			//showArrow:false,
+			promptPosition:"centerRight",
+			maxErrorsPerField:1,
+			showOneMessage:true,
+			addPromptClass:"formError-noArrow formError-text"
+		});
+		$('#code').focus();
+		
+		
+		
+		// 编辑时初始化日期disable属性
+		var selected = $("#card_type :selected").val();
+		
+		if(selected == 3 || selected == 4)
+			$("#cdate").attr("disabled","disabled");
+		else
+			$("#cdate").removeAttr('disabled');
+		
+		$("#card_type").change(function(){
+			if($(this).val()==3 || $(this).val()==4){
+				$("#cdate").attr("disabled","disabled");
+			}else{
+				$("#cdate").removeAttr('disabled');
+			}
+		});
+
+	});
+{/literal}
+</script>

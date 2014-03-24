@@ -1,0 +1,103 @@
+{include file="Public/page_header.html"}
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="archives_nav" id="group"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+     
+      <div class="car_info_box">
+        <h2 class="title_txt">管理组权限</h2>
+        <form id="user_form" class="user_form formular" method="post" action="__URL__/modifyDo">
+        <input type="hidden" name="id" value="{$id}">
+        	<table border="0" cellspacing="0" cellpadding="0" class="ntable">
+        		<tr>
+        			<th class="width8">权限组名称：</th>
+        			<td><input value="" class="validate[required] inp" type="text" name="data[group_name]" id="group_name"/></td>
+        		</tr>
+        		<tr>
+        			<th>备注：</th>
+        			<td><textarea name="data[remark]" id="remark" cols="50" rows="3"></textarea></td>
+        		</tr>
+        		
+        		{foreach from=$menuList item=m}
+        		<tr>
+        			<th>{$m.name}：</th>
+        			<td>
+	        			{foreach from=$m.subMenuList item=sub key=k}
+	        			<input type="checkbox" id="item_{$sub.id}" name="levels[]" value="{$sub.id}" /><label for="item_{$sub.id}">{$sub.name}</label>{if $m.wrapLength && ($k+1) eq $m.wrapLength}<br />{/if}
+	        			{/foreach}
+        			</td>
+        		</tr>
+        		{/foreach}
+        		
+        		
+        		
+        		
+        		<!-- <tr>
+        			<th>维护权限：</th>
+        			<td>
+        			<input type="checkbox" id="i1" name="levels[]" value="1"/><label for="i1">修改密码</label> 
+        			<input type="checkbox" id="i2" name="levels[]" value="2"/><label for="i2">设置参数</label> 
+        			<input type="checkbox" id="i3" name="levels[]" value="3"/><label for="i3">系统维护</label> 
+        			<input type="checkbox" id="i4" name="levels[]" value="4"/><label for="i4">设置收费</label></td>
+        		</tr>
+        		
+        		<tr>
+        			<th>档案权限：</th>
+        			<td><input type="checkbox" id="i5" name="" /><label for="i5">权限组档案</label> <input type="checkbox" id="i6" name="" /><label for="i6">操作员档案</label> <input type="checkbox" id="i7" name="" /><label for="i7">停车场档案</label></td>
+        		</tr>
+        		<tr>
+        			<th>卡片权限：</th>
+        			<td><input type="checkbox" id="i8" name="" /><label for="i8">卡片检测</label> <input type="checkbox" id="i9" name="" /><label for="i9">卡片发行</label> <input type="checkbox" id="i10" name="" /><label for="i10">卡片延期</label> <input type="checkbox" id="i11" name="" /><label for="i11">卡片充值</label> <input type="checkbox" id="i12" name="" /><label for="i12">卡片挂失</label> <br /> <input type="checkbox" id="i13" name="" /><label for="i13">卡片恢复</label> <input type="checkbox" id="i14" name="" /><label for="i14">卡片更换</label> <input type="checkbox" id="i15" name="" /><label for="i15">卡片回收</label> <input type="checkbox" id="i16" name="" /><label for="i16">卡片档案</label> <input type="checkbox" id="i17" name="" /><label for="i17">卡片出场</label></td>
+        		</tr>
+        		<tr>
+        			<th>监控权限：</th>
+        			<td><input type="checkbox" id="i18" name="" /><label for="i18">出入监控</label></td>
+        		</tr>
+        		<tr>
+        			<th>记录权限：</th>
+        			<td><input type="checkbox" id="i19" name="" /><label for="i20">入场记录</label> <input type="checkbox" id="i20" name="" /><label for="i19">出场记录</label> <input type="checkbox" id="i21" name="" /><label for="i21">卡片记录</label> <input type="checkbox" id="i22" name="" /><label for="i22">在场停车</label> <input type="checkbox" id="i23" name="" /><label for="i23">交接班记录</label> <input type="checkbox" id="i24" name="" /><label for="i24">值班流水账</label></td>
+        		</tr>
+        		<tr>
+        			<th>报表权限：</th>
+        			<td><input type="checkbox" id="i25" name="" /><label for="i25">操作员收费</label> <input type="checkbox" id="i26" name="" /><label for="i26">收费日报表</label> <input type="checkbox" id="i27" name="" /><label for="i27">收费月报表</label> <input type="checkbox" id="i28" name="" /><label for="i28">收费年报表</label> <input type="checkbox" id="i29" name="" /><label for="i29">入场日报表</label> <br /> <input type="checkbox" id="i30" name="" /><label for="i30">入场月报表</label> <input type="checkbox" id="i31" name="" /><label for="i31">入场年报表</label> <input type="checkbox" id="i32" name="" /><label for="i32">出场日报表</label> <input type="checkbox" id="i33" name="" /><label for="i33">出场月报表</label> <input type="checkbox" id="i34" name="" /><label for="i34">出场年报表</label></td>
+        		</tr> -->
+        		<tr>
+        			<th></th>
+        			<td height="80"><input name="" type="image" src="__PUBLIC__/images/tijiao2.jpg" /></td>
+        		</tr>
+        	</table>
+        </form>
+		</div>
+</div>  
+<script>
+{literal}
+	jQuery(document).ready(function(){
+		// binds form submission and fields to the validation engine
+		jQuery("#user_form").validationEngine({ 
+			scroll:false,
+			//binded:false,
+			//showArrow:false,
+			promptPosition:"centerRight",
+			maxErrorsPerField:1,
+			showOneMessage:true,
+			addPromptClass:"formError-noArrow formError-text"
+		});
+{/literal}
+		
+		{foreach from=$data item=v key=k}
+			if($('#'+'{$k}').size() > 0) $('#'+'{$k}').val('{$v}');
+		{/foreach}
+		
+		
+		{foreach from=$data.levels item=v}
+			if($('#item_{$v}').size() > 0) $('#item_{$v}').attr('checked',true);
+		{/foreach}
+{literal}
+	});
+{/literal}
+</script>
+{include file="Public/page_footer.html"}

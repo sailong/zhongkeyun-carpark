@@ -1,0 +1,130 @@
+{include file="Public/page_header.html"}
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="setting_nav" id="communication"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+      <div class="car_info_box">
+       	<h2 class="title_txt">通讯参数</h2>
+      	<form id="user_form" class="user_form formular" method="post" action="__URL__/update">
+        <input type="hidden" value="{$item}" name="item"/>
+      	
+      	<div class="basic_box">
+        	<h4>图像与语音参数</h4>
+            <table width="800" border="0" cellspacing="0" cellpadding="0" class="basic">
+              <tr>
+                <td>带图像对比：</td>
+                <th><select name="setting[image_contrast]" id="image_contrast">
+                  <option value="1">是</option>
+                  <option value="0">否</option>
+                </select></th>
+                <td>带语音提示：</td>
+                <th><select name="setting[voice_tips]" id="voice_tips"><option value="1">是</option>
+                  <option value="0">否</option></select></th>
+                <td>播放车辆：</td>
+                <th><select name="setting[display_carcode]" id="display_carcode"><option value="1">是</option>
+                  <option value="0">否</option></select></th>
+              </tr>
+            </table>
+           
+           
+            <h4>进出参数</h4>
+            <table width="800" border="0" cellspacing="0" cellpadding="0" class="basic">
+              <tr>
+                <td>重复入场：</td>
+                <th><select name="setting[repeat_entrance]" id="repeat_entrance">
+                  <option value="1">允许</option>
+                  <option value="0">不允许</option>
+                </select></th>
+                <td>重复出场：</td>
+                <th><select name="setting[repeat_export]" id="repeat_export"><option value="1">允许</option>
+                  <option value="0">不允许</option></select></th>
+                <td>非临时车是否需要对比确认才可以出场：</td>
+                <th><select name="setting[nontemp_contrast]" id="nontemp_contrast"><option value="1">是</option>
+                  <option value="0">否</option></select></th>
+              </tr>
+            </table>
+            <table width="800" border="0" cellspacing="0" cellpadding="0" class="basic">
+              <tr>
+                <td>本地区车牌简写：</td>
+                <th><input type="text" name="setting[abb]" value="" id="abb"/></th>
+                <td>月租/贵宾车预警天数：</td>
+                <th><input type="text" name="setting[warn_days]" value="" id="warn_days"/></th>
+                <td>采用远距离读卡器：</td>
+                <th><select name="setting[is_far_ready]" id="is_far_ready"><option value="1">是</option>
+                  <option value="0">否</option></select></th>
+                  <td></td>
+                <th></th>
+              </tr>
+              
+            </table>
+            <table width="800" border="0" cellspacing="0" cellpadding="0" class="basic">
+            <tr>
+                <td>允许人工控制道闸：</td>
+                <th><select name="setting[artificial_brake]" id="artificial_brake">
+                  <option value="1">是</option>
+                  <option value="0">否</option>
+                </select></th>
+                <td>记录出门按钮动作：</td>
+                <th><select name="setting[record_artificial]" id="record_artificial">
+                  <option value="1">是</option>
+                  <option value="0">否</option>
+                </select></th>
+                <td></td>
+                <th></th>
+              </tr>
+             
+            </table>
+            <table width="800" border="0" cellspacing="0" cellpadding="0" class="basic">
+              <tr>
+                <td>相同车位禁止重复入场：</td>
+                <th><select name="setting[repeat_park]" id="repeat_park">
+                  <option value="1">是</option>
+                  <option value="0">否</option>
+                </select></th>
+                <td>出场自动记录收费，但不开闸：</td>
+                <th><select name="setting[]" id=""><option value="1">是</option>
+                  <option value="0">否</option></select></th>
+                <td></td>
+                <th> 发送短信：<select name="setting[is_send_sms]" id="is_send_sms"><option value="1">是</option>
+                  <option value="0">否</option></select></th>
+              </tr>
+            </table>
+            
+             <table width="300" border="0" cellspacing="0" cellpadding="0" class="basic">
+              <tr>
+                <td>限制同户共享车位进入车库的数量：</td>
+                <th>
+                	<select name="setting[allow_share_parking_into]" id="allow_share_parking_into">
+	                  <option value="1">是</option>
+	                  <option value="0">否</option>
+                	</select>
+                </th>
+               
+              </tr>
+            </table>
+          <div class="jbsz_tj"><input type="image" src="__PUBLIC__/images/tijiao2.jpg" /></div>
+
+
+        </div> 
+      	
+        </form>
+      </div>
+    </div>  
+     
+<script type="text/javascript">
+{literal}
+jQuery(document).ready(function(){
+{/literal}
+
+{foreach from=$setting item=s key=k}
+	if($('#'+'{$k}').size() > 0) $('#'+'{$k}').val('{$s}');
+{/foreach}	
+{literal} 
+});	
+{/literal}
+</script> 
+{include file="Public/page_footer.html"}

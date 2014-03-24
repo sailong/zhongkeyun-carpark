@@ -1,0 +1,86 @@
+{include file="Public/page_header.html"}
+<script src="__PUBLIC__/js/My97DatePicker/WdatePicker.js"></script>
+ <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+              {insert name="sub_nav" id="restore"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        
+         <div class="query">
+        	<form id="user_form" class="user_form formular" method="get">
+		    	<select name="searchType">
+		    		<option value="code" {if $searchType == 'code'}selected="selected"{/if}>卡片内码</option>
+		    		<option value="add_time" {if $searchType == 'add_time'}selected="selected"{/if}>恢复日期</option>
+		    		<option value="user_name" {if $searchType == 'user_name'}selected="selected"{/if}>操作员</option>
+		    	</select>
+		        <input name="keyword" type="text" value="{$keyword}" {if $searchType == 'add_time'} onClick="WdatePicker()" {/if}/>
+		        <input name="" type="image" src="__PUBLIC__/images/cx.jpg" />
+		        <a href="__URL__/add" class="addn"><img src="__PUBLIC__/images/zengjia.jpg" /></a>
+        	</form>
+    	</div>
+        <div class="list_scroll">
+        <table border="0" cellspacing="0" cellpadding="0" class="list_table">
+          <tr class="title_t">
+            <th class="width_1">ID</td>
+            <th class="width_1">卡片内码</th>
+            <th class="width_1">卡片类别</th>
+            <th class="width_2">有效期限</th>
+            <th class="width_1">卡片余额</th>
+            <th class="width_1">车牌号码</th>
+            <th class="width_1">车主姓名</th>
+            <th class="width_2">恢复时间</th>
+            <th class="width_1">操作员</th>
+            <th class="width_2">备注</th>
+          </tr>
+          {if !empty($data)}
+          	{foreach from=$data item=card}
+	          <tr>
+	            <td>{$card.card_id}</td>
+	            <td>{$card.code}</td>
+	            <td>{$card.card_type}</td>
+	            <td>{$card.expire_time}</td>
+	            <td>{$card.money}</td>
+	            <td>{$card.car_code}</td>
+	            <td>{$card.name}</td>
+	            <td>{$card.add_time}</td>
+	            <td>{$card.user_name}</td>
+	            <td>{$card.remark}</td>
+	          </tr>
+          	{/foreach}
+          {/if}
+	    </table>
+		</div>
+		<div class="yema">
+        	{if !empty($paging)}
+        		{$paging}
+        	{/if}
+        </div>
+</div>
+
+<script>
+{literal}
+jQuery(document).ready(function(){
+	// 按时间搜索时显示时间插件
+	$("select[name=searchType]").change(function(){
+		if($(this).val() == 'add_time')
+		{
+			$("input[name=keyword]").val('');
+			$("input[name=keyword]").addClass('Wdate');
+			$("input[name=keyword]").bind('click',function(){
+				WdatePicker();
+			});
+		}else{
+			$("input[name=keyword]").val('');
+			$("input[name=keyword]").removeClass('Wdate');
+			$("input[name=keyword]").unbind('click');
+			$("input[name=keyword]").removeAttr('onClick');
+		}
+	});
+});
+{/literal}
+</script>
+
+{include file="Public/page_footer.html"}

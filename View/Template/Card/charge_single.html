@@ -1,0 +1,81 @@
+{include file="Public/page_header.html"}
+ <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="sub_nav" id="charge"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        
+         <div class="car_info_box">
+        <h2 class="title_txt">卡片充值</h2>
+        <form id="user_form" class="user_form formular" method="post" action="__URL__/chargeSingle">
+        	<table border="0" cellspacing="0" cellpadding="0" class="ntable">
+        	{if $masterCard && $data}
+        		<tr>
+        			<th class="width8">卡片内码：</th>
+        			<td colspan="5"><input class="validate[required,custom[onlyNumberSp]] inp" size="40" id="code" type="text" name="data[sub_card]" value="{$code}" readonly="readonly" /></td>
+        		</tr>
+        		<tr>
+        			<th class="width8">主卡内码：</th>
+        			<td colspan="5"><input class="validate[required,custom[onlyNumberSp]] inp" size="40" id="code" type="text" name="data[code]" value="{$data.code}" readonly="readonly"/> <font color="red">(金额将被充值到该账户中)</font></td>
+        		</tr>
+        	{else}
+        		<tr>
+        			<th class="width8">卡片内码：</th>
+        			<td colspan="5"><input class="validate[required,custom[onlyNumberSp]] inp" size="40" id="code" type="text" name="data[code]" value="{$data.code}" /> (请刷卡输入)</td>
+        		</tr>
+        	{/if}	
+        	{if !empty($data)}
+        		<tr>
+        			<th class="width8">余额：</th>
+        			<td><input value="{$data.money}" class="inp" type="text" name="money" disabled="disabled" /></td>
+        			<th class="width8">充值金额：</th>
+        			<td><input value="" class="validate[required,custom[onlyNumberSp]] inp" type="text" name="data[charge]" /></td>
+        			<th class="width8">充后余额：</th>
+        			<td><input class="inp" type="text" name="afterCharge" disabled="disabled"/></td>
+        		</tr>
+        		<tr>
+        			<th>车主姓名：</th>
+        			<td><input value="{$data.name}" class="inp" type="text" name="name" disabled="disabled" /></td>
+        			<th>车牌号码：</th>
+        			<td><input value="{$data.car_code}" class="inp" type="text" name="car_code" disabled="disabled" /></td>
+        			<th>备注：</th>
+        			<td><input value="" class="inp" type="text" name="data[remark]" /></td>
+        		</tr>
+        		<tr>
+        			<th></th>
+        			<td height="80" colspan="5"><input name="" type="image" src="__PUBLIC__/images/tijiao2.jpg" /></td>
+        		</tr>
+        		{/if}
+        	</table>
+        </form>
+	</div>
+</div>
+
+<script>
+{literal}
+jQuery(document).ready(function(){
+	jQuery("#user_form").validationEngine({ 
+		scroll:false,
+		//binded:false,
+		//showArrow:false,
+		promptPosition:"centerRight",
+		maxErrorsPerField:1,
+		showOneMessage:true,
+		addPromptClass:"formError-noArrow formError-text"
+	});
+	
+	$("#code").focus();
+	
+	// 变动充值后的金额
+	jQuery(":input[name='data[charge]']").bind("blur",function(){
+		var after = parseInt(jQuery(this).val()) + parseInt(jQuery(":input[name=money]").val());
+		jQuery(":input[name=afterCharge]").val(after);
+	});
+});
+{/literal}
+</script>
+
+{include file="Public/page_footer.html"}

@@ -1,0 +1,95 @@
+{include file="Public/page_header.html"}
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="setting_nav" id="base"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+      <div class="car_info_box">
+       	<h2 class="title_txt">基本设置</h2>
+      	<form id="user_form" class="user_form formular" method="post" action="__URL__/update">
+        <input type="hidden" value="base" name="item"/>
+      	<div class="basic_box">
+        	<h4>客户名称</h4>
+            <div class="company">公司名称：<input class="validate[required] text-input" type="text" name="setting[company_name]" id="form-validation-field-0" value="{$setting.company_name}"></div>
+            <h4>记录保留天数及自动删除参数</h4>
+            <table width="700" border="0" cellspacing="0" cellpadding="0" class="basic">
+              <tr>
+                <td>抓拍图像保留天数：</td>
+                <th><input value="{$setting.capture_stay}" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="setting[capture_stay]"></th>
+                <td>出入记录保留天数：</td>
+                <th><input value="{$setting.gocome_stay}" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="setting[gocome_stay]"></th>
+                <td>交接班记录保留天数：</td>
+                <th><input value="{$setting.work_stay}" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="setting[work_stay]"></th>
+              </tr>
+              <tr>
+                <td>自动删除过期图像：</td>
+                <th><select name="setting[del_capture]" id="del_capture">
+                  <option value="1">是</option>
+                  <option value="0">否</option>
+                </select></th>
+                <td>自动删除过期出入记录：</td>
+                <th><select name="setting[del_gocome]" id="del_gocome">
+                  <option value="1">是</option>
+                  <option value="0">否</option></select></th>
+                <td>自动删除交接班记录：</td>
+                <th><select name="setting[del_work]" id="del_work">
+                  <option value="1">是</option>
+                  <option value="0">否</option></select></th>
+              </tr>
+            </table>
+            <h4>停车场信息</h4>
+            <table width="700" border="0" cellspacing="0" cellpadding="0" class="basic1">
+              <tr>
+                <td>停车场总车位：</td>
+                <th><input value="{$setting.park_count}" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="setting[park_count]"></th>
+                <td><!-- 初始编号长度： --></td>
+                <th><!-- <input value="{$setting.code_len}" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="setting[code_len]"> --></th>
+                <td>储值车最少余额：</td>
+                <th><input value="{$setting.least_money}" class="validate[required,custom[onlyNumberSp]] text-input" type="text" name="setting[least_money]"></th>
+                <td></td>
+                <th></th>
+              </tr>
+            </table>
+            <div class="jbsz_tj"><input name="" type="image" src="__PUBLIC__/images/tijiao2.jpg" /></div>
+
+
+        </div> 
+        </form>
+      </div>
+    </div>  
+     
+<script type="text/javascript">
+{literal}
+jQuery(document).ready(function(){
+	// binds form submission and fields to the validation engine
+	
+	jQuery("#user_form").validationEngine({ 
+		scroll:false,
+		//binded:false,
+		//showArrow:false,
+		promptPosition:"centerRight",
+		maxErrorsPerField:1,
+		showOneMessage:true,
+		addPromptClass:"formError-noArrow formError-text",
+		custom_error_messages:{
+			"#pwd":{
+				"minSize":{
+					"message":"* 密码不得少于 6 位，建议使用英文与数字组合"
+				}
+			}
+		}
+	});
+	{/literal}
+	var del_capture = '{$setting.del_capture}';
+	var del_gocome = '{$setting.del_gocome}';
+	var del_work = '{$setting.del_work}';
+	$('#del_capture').val(del_capture);
+	$('#del_gocome').val(del_gocome);
+	$('#del_work').val(del_work);
+{literal}  	
+});	{/literal}
+</script> 
+{include file="Public/page_footer.html"}

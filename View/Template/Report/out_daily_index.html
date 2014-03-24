@@ -1,0 +1,43 @@
+{include file="Public/page_header.html"}
+<script src="__PUBLIC__/js/My97DatePicker/WdatePicker.js"></script>
+
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+                {insert name="sub_nav" id="OutDaily"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        <div class="query">
+        	<div class="searchbox">
+        	<form id="user_form" class="user_form formular" method="get">
+        		<span class="searchtit">统计日期：</span>
+				<input type="text" size="24" class="Wdate" {literal}onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'%y-%M-%d'})"{/literal} name="date" id="date" value="{$date}"/>
+		        <input name="" type="image" src="__PUBLIC__/images/tijiao1.jpg" />
+		    </form>
+		    </div>
+    	</div>
+        <div class="list_scroll">
+        {if $list}
+        <table border="0" cellspacing="0" cellpadding="0" class="list_table" style="width:100%;">
+          <tr class="title_t">
+           {foreach from=$thArr item=val}
+           	<th class="width_1">{$val}</td>
+           {/foreach}
+          </tr>
+          {foreach from=$list item=val}
+	          <tr>
+	            <td>{$val.date}</td>
+	            {foreach from=$thArr item=v key=k}
+	            {if $k neq 0}
+	            	<td>{$val.stat.$k}</td>
+	            {/if}
+	            {/foreach}
+	            <td>{$val.total}</td>
+	          </tr>
+          {/foreach}
+        </table>
+        {/if}
+</div>
+</div>

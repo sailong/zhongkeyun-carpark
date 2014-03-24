@@ -1,0 +1,139 @@
+{include file="Public/page_header.html"}
+ <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+              {insert name="sub_nav" id="archive"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        
+          <div class="query">
+        	<form id="user_form" class="user_form formular" method="get">
+		    	<select name="searchType">
+		    		<option value="code" {if $searchType == 'code'}selected="selected"{/if}>卡片内码</option>
+		    		<option value="card_type" {if $searchType == 'card_type'}selected="selected"{/if}>卡片类型</option>
+		    		<option value="car_code" {if $searchType == 'car_code'}selected="selected"{/if}>车牌号码</option>
+		    		<option value="name" {if $searchType == 'name'}selected="selected"{/if}>车主姓名</option>
+		    		<option value="address" {if $searchType == 'address'}selected="selected"{/if}>联系地址</option>
+		    		<option value="parking" {if $searchType == 'parking'}selected="selected"{/if}>车&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;位</option>
+		    		<option value="card_status" {if $searchType == 'card_status'}selected="selected"{/if}>卡片状态</option>
+		    	</select>
+		    	<span id="search_content"><input name="keyword" type="text" value="{$keyword}" id="s_keyword_value"/></span>
+		        
+		        <input name="search" type="image" src="__PUBLIC__/images/cx.jpg" />
+		        <input name="daochu" type="image" src="__PUBLIC__/images/daochu.jpg" />
+		        导出车库卡片信息:
+		        <a href="__URL__/exportcardexcel/park_id/0" class="cz_tag">小区大门</a> 
+		        {foreach from=$park_info item=park}
+		        <a href="__URL__/exportcardexcel/park_id/{$park.park_id}" class="cz_tag">{$park.park_name}</a> 
+		        {/foreach}
+		       <!--   <a href="#" class="addn"><img src="__PUBLIC__/images/daochu.jpg" /></a>-->
+        	</form>
+    	</div>
+        <div class="list_scroll">
+        <table border="0" cellspacing="0" cellpadding="0" class="list_table">
+          <tr class="title_t">
+            <th class="width_1">ID</td>
+            <th class="width_2">卡片内码</th>
+            <th class="width_1">卡片类别</th>
+            <th class="width_2">有效限期</th>
+            <th class="width_1">卡片余额</th>
+            <th class="width_1">车牌号码</th>
+            <th class="width_1">车主姓名</th>
+            <th class="width_2">地址</th>
+            <th class="width_1">状态</th>
+           
+            <th class="width_2">操作</th>
+          </tr>
+          {if !empty($data)}
+          	{foreach from=$data item=card}
+	          <tr>
+	            <td>{$card.card_id}</td>
+	            <td>{$card.code}{if $card.card_type_code == 2 && $card.is_master == 1}【主】{/if}</td>
+	            <td>{$card.card_type}</td>
+	            <td>{$card.expire_time}</td>
+	            <td>{$card.money}</td>
+	            <td>{$card.car_code}</td>
+	            <td>{$card.name}</td>
+	             <td>{$card.address}</td>
+	            <td>{$card.status}</td>
+	            
+	            <td>
+	            	{if $card.status_code!=2}
+	            	<a href="__URL__/modify/id/{$card.card_id}" class="cz_tag">修改</a>
+	            	<a href="__URL__/writeToController/id/{$card.card_id}" class="cz_tag">写入控制器</a>
+	            	{/if}
+	            	{if $searchType == 'address' && !$isSetMaster && $card.status_code==0 && $card.card_type_code == 2}<a href="javascript:;" class="cz_tag2" card_id="{$card.card_id}">设置为主账户</a> {/if}
+	            </td>
+	          </tr>
+          	{/foreach}
+          {/if}
+	    </table>
+		</div>
+		<div class="yema">
+        	{if !empty($paging)}
+        		{$paging}
+        	{/if}
+        </div>
+</div>
+<div id="card_type_list" style="display:none">
+	<select id="s_keyword_value" name="keyword">
+		<option value="0">选择卡片类型</option>
+		{foreach from=$cardTypeList item=type}
+			<option value="{$type}">{$type}</option>
+		{/foreach}
+	</select>
+</div>
+<script>
+var card_list_html = $('#card_type_list').html();
+var input_html = '<input name="keyword" type="text" value="" id="s_keyword_value"/>';
+var keyword='{$keyword}';
+var card_status_html = '<select id="s_keyword_value" name="keyword"><option value="4">欠费</option><option value="5">过期</option></select>';
+changeSearchContent('{$searchType}');
+{literal}
+jQuery(document).ready(function(){
+	// 按时间搜索时显示时间插件
+	$("select[name=searchType]").change(function(){
+		
+		changeSearchContent($(this).val());
+	});
+	
+	$('.cz_tag2').click(function(){
+		if(!confirm('该户其它储值卡余额将合并至主帐户,您确定要进行此操作?')) return;
+		var card_id = $(this).attr('card_id');
+		
+		$.ajax({
+			  url: '/card/archive/setMaster/card_id/'+card_id,
+			  success: function(data){
+				  alert(data.msg);
+				  if(data.code==1)
+				  {
+					  window.location.reload(); 
+				  }
+			  },
+			  dataType: 'json'
+			});
+	});
+	
+	if(keyword) $('#s_keyword_value').val(keyword);
+});
+
+function changeSearchContent(type)
+{
+	if(type=='card_type')
+	{
+		$('#search_content').html(card_list_html);
+	}else if(type=='card_status')
+	{
+		$('#search_content').html(card_status_html);
+	}else
+	{
+		$('#search_content').html(input_html);
+		$("input[name=keyword]").val('');
+	}
+}
+{/literal}
+</script>
+
+{include file="Public/page_footer.html"}

@@ -1,0 +1,83 @@
+{include file="Public/page_header.html"}
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="archives_nav" id="admin"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+     
+        <div class="car_info_box">
+       	<h2 class="title_txt">管理组人员</h2>
+        <form id="user_form" class="user_form formular" method="post" action="__URL__/modifyDo">
+        <input type="hidden" name="id" value="{$id}">
+        <div class="list_scroll">
+      		<table border="0" cellspacing="0" cellpadding="0" class="ntable">
+        		<tr>
+        			<th class="width8">名称：</th>
+        			<td><input value="" class="validate[required] inp" type="text" name="data[admin_name]" id="admin_name"/></td>
+        		</tr>
+        		<tr>
+        			<th>密码：</th>
+        			<td><input value="" class="{if $id eq ''}validate[required]{/if} inp" type="password" name="data[password]" id="password" autocomplete="off"/>
+        			{if $id neq ''}不修改则留空{/if}
+        			</td>
+        		</tr>
+        		<tr>
+        			<th>所在权限组：</th>
+        			<td><select name="data[group_id]" id="group_id">
+        				{foreach from=$groupList item=g}
+        				<option value="{$g.group_id}">{$g.group_name}</option>
+        				{/foreach}
+        			   </select></td>
+        		</tr>
+        		
+        		<tr>
+        			<th class="width8">手机号码：</th>
+        			<td><input value="" class="validate[required,custom[mobilephone]] inp" type="text" name="data[mobile]" id="mobile"/></td>
+        		</tr>
+        		
+        		<tr>
+        			<th>是否接收短信：</th>
+        			<td>
+        				<select name="data[is_receive_msg]" id="is_receive_msg">
+	        				<option value="0">否</option>
+	        				<option value="1">是</option>
+        			    </select>
+        			</td>
+        		</tr>
+        		
+        		<tr>
+        			<th></th>
+        			<td height="80"><input name="" type="image" src="__PUBLIC__/images/tijiao2.jpg" /></td>
+        		</tr>
+        	</table>
+        </div>
+        </form>
+      </div>
+</div>  
+<script>
+{literal}
+	jQuery(document).ready(function(){
+		// binds form submission and fields to the validation engine
+		jQuery("#user_form").validationEngine({ 
+			scroll:false,
+			//binded:false,
+			//showArrow:false,
+			promptPosition:"centerRight",
+			maxErrorsPerField:1,
+			showOneMessage:true,
+			addPromptClass:"formError-noArrow formError-text"
+		});
+{/literal}
+		
+		{foreach from=$data item=v key=k}
+			if($('#'+'{$k}').size() > 0) $('#'+'{$k}').val('{$v}');
+		{/foreach}
+		$('#password').val('');
+{literal}
+	});
+{/literal}
+</script>
+{include file="Public/page_footer.html"}

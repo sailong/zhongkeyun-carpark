@@ -1,0 +1,80 @@
+{include file="Public/page_header.html"}
+ <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+              {insert name="sub_nav" id="replace"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+         <div class="car_info_box">
+        <h2 class="title_txt">卡片更换</h2>
+        <form id="user_form" class="user_form formular" method="post" action="__URL__/add">
+        	<table border="0" cellspacing="0" cellpadding="0" class="ntable">
+        		<tr>
+        			<th class="width8">旧卡内码：</th>
+        			<td colspan="5"><input class="validate[required,custom[onlyNumberSp]] inp" size="40" id="code" type="text" name="data[code]" {if !empty($data)} value="{$data.code}" {/if} /> (请刷卡输入)</td>
+        		</tr>
+        		{if !empty($data)}
+        		<tr>
+        			<th class="width8">新片内码：</th>
+        			<td colspan="5"><input value="" class="validate[required,custom[onlyNumberSp]] inp" size="40" type="text" name="data[new_code]" /></td>
+        		</tr>
+        		<tr>
+        			<th class="width8">卡片类别：</th>
+        			<td>
+        				<input type="text" name="data[card_type]" value="{$data.format_card_type}" disabled="disabled">
+        				<!-- 
+        				<select name="" id="" disabled="disabled">
+        				<option value="">临时卡</option>
+        				<option value="">月租卡</option>
+        				<option value="">储值卡</option>
+        				<option value="">贵宾卡</option>
+        				</select>
+        				 -->
+        			</td>
+        			<th class="width8">有效期限：</th>
+        			<td><input value="{$data.format_expire_time}" class="inp" type="text" name="data[expire_time]" disabled="disabled" /></td>
+        			<th class="width8">卡片余额：</th>
+        			<td><input value="{$data.money}" class="inp" type="text" name="data[money]" disabled="disabled" /></td>
+        		</tr>
+        		<tr>
+        			<th>付款金额：</th>
+        			<td><input class="inp" type="text" name="data[charge]" /></td>
+        			<th>备注：</th>
+        			<td><input value="" class="inp" type="text" name="data[remark]" /></td>
+        			<th></th>
+        			<td></td>
+        		</tr>
+        		<tr>
+        			<th></th>
+        			<td height="80" colspan="5"><input name="" type="image" src="__PUBLIC__/images/tijiao2.jpg" /></td>
+        		</tr>
+        		{/if}
+        	</table>
+        </form>
+   </div>
+ </div>
+ 
+ <script>
+ {literal}
+ 
+	jQuery(document).ready(function(){
+		$("input[name='data[new_code]']").keypress(function(e) {
+            var key = window.event?e.keyCode:e.which;
+             if(key.toString() == "13"){
+            	 if(e.preventDefault){
+            		 e.preventDefault(); //除IE6-8之外的浏览器(包括IE9)
+            	 }else{
+            		 e.returnValue = false; //IE6-8
+            	 }
+                  return false;
+             }
+     	});
+		
+		$("#code").focus();
+	})
+ 
+ {/literal}
+ 
+ </script>

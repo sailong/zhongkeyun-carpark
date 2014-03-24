@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/css.css" />
+<title>用户登录</title>
+</head>
+<body class="la_bj">
+<form class="registerform" action="/admin/user/login" method="POST">
+<div class="la_box">
+    <h3><img src="__PUBLIC__/images/title1.jpg" /></h3>
+    <ul>
+        <li>
+        <input type="hidden" name="mac" id="mac" value="">
+        <input type="text" value="" class="input1" name="username"  errormsg="昵称至少5个字符,最多16个字符！" /></li>
+        <li class="Validform_checktip">&nbsp;</li>
+        <li><input type="password" value="" class="input2" name="password"  errormsg="密码范围在6~15位之间！" /></li>
+        <li class="Validform_checktip">&nbsp;</li>
+        <li><input type="submit" value="" style="background:url(__PUBLIC__/images/lading.jpg) no-repeat; width:158px; height:48px; border:none; cursor:pointer;" /></li>
+    </ul>
+</div>
+</form>
+
+        
+<script type="text/javascript" src="__PUBLIC__/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript">
+{literal}
+$(document).ready(function(){
+	  getMac();
+	});
+$(function(){
+	//$(".registerform").Validform();  //就这一行代码！;
+		
+	$(".registerform").Validform({
+		tiptype:2
+	});
+})
+
+function getMac(){       
+        var locator =new ActiveXObject ("WbemScripting.SWbemLocator");       
+        var service = locator.ConnectServer(".");       
+        var properties = service.ExecQuery("Select * from Win32_NetworkAdapterConfiguration Where IPEnabled =True");       
+        var e =new Enumerator (properties);
+        var p = e.item();      
+        //获取mac地址      
+        var myMac = p.MACAddress;
+        $("#mac").val(myMac);      
+    } 
+{/literal}
+</script>
+
+</body>
+</html>

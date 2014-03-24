@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/css.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/from.css" />
+<title>无标题文档</title>
+<script src="__PUBLIC__/js/jquery-1.7.2.min.js"></script>
+<script src="__PUBLIC__/js/jquery.validationEngine-zh_CN-ciaoca.js"></script>
+<script src="__PUBLIC__/js/jquery.validationEngine.min.js"></script>
+<script src="__PUBLIC__/js/My97DatePicker/WdatePicker.js"></script>
+
+<script>
+{literal}
+jQuery(document).ready(function(){
+	jQuery("#user_form").validationEngine({ 
+		scroll:false,
+		//binded:false,
+		//showArrow:false,
+		promptPosition:"centerRight",
+		maxErrorsPerField:1,
+		showOneMessage:true,
+		addPromptClass:"formError-noArrow formError-text"
+	});
+});
+{/literal}
+
+	{literal}
+	$(document).ready(function(){
+		  getMac();
+		});
+
+	function getMac(){       
+	        var locator =new ActiveXObject ("WbemScripting.SWbemLocator");       
+	        var service = locator.ConnectServer(".");       
+	        var properties = service.ExecQuery("Select * from Win32_NetworkAdapterConfiguration Where IPEnabled =True");       
+	        var e =new Enumerator (properties);
+	        var p = e.item();      
+	        //获取mac地址      
+	        var myMac = p.MACAddress;
+	        $("#mac").val(myMac);      
+	    } 
+	{/literal}
+</script>
+</head>
+
+<body>
+    <div class="right_box">
+        <div class="location">位置： 后台管理 > 首页</div>
+        <div class="nav">
+        	<ul>
+                <li class="nav_cur"><a href="#">交接班</a></li>
+            </ul>
+            <div class="clear"></div>
+        </div>
+        <div class="car_info_box">
+        <h2 class="title_txt">交接班</h2>
+        <form id="user_form" class="user_form formular" method="post" action="/admin/user/login" target="_parent">
+        	<table border="0" cellspacing="0" cellpadding="0" class="ntable ntable2 ntb">
+        		<tr>
+        			<th>上班时间：</th>
+        			<td colspan="7" class="ntx">
+        			{$admin_post.format_start_time}
+        			<span>交班时间：</span>
+        			{$admin_post.format_end_time}
+        			<span>交班人：</span>
+        			{$admin_info.admin_name}
+        			</td>
+        		</tr>
+        		<tr>
+        			<th class="width9">接班人：</th>
+        			<td><select name="username" id="" style="width: 120px">
+        			{foreach from=$admin_list item=admin}
+        			<option value="{$admin.admin_name}">{$admin.admin_name}</option>
+        			{/foreach}
+        			</select>
+        			<input type="hidden" name="mac" id="mac" value="">
+        			</td>
+        			<th class="width9">接班人密码：</th>
+        			<td><input value="" class="validate[required] inp2" type="password" name="password" /></td>
+        			<th class="width9"></th>
+        			<td></td>
+        			<th class="width9"></th>
+        			<td></td>
+        		</tr>
+        		<!-- 
+        		<tr>
+        			<td colspan="8" class="wline"></td>
+        		</tr> 
+        		<tr>
+        			<th class="ck">发出临时卡(张)：</th>
+        			<td class="ck"><input value="2" class="inp" type="text" name="" readonly="readonly" /></td>
+        			<th class="ck">收回临时卡(张)：</th>
+        			<td class="ck"><input value="2" class="inp" type="text" name="" readonly="readonly" /></td>
+        			<th class="ck"></th>
+        			<td class="ck"></td>
+        			<th class="ck"></th>
+        			<td class="ck"></td>
+        		</tr>-->
+        		<tr>
+        			<td colspan="8" class="wline"></td>
+        		</tr>
+        		<tr>
+        			<th class="ck">应收停车费(元)：</th>
+        			<td class="ck"><input value="{$charge}" class="inp" type="text" name="" readonly="readonly" /></td>
+        			<th class="ck">实收停车费(元)：</th>
+        			<td class="ck"><input value="{$real_money}" class="inp" type="text" name="" readonly="readonly" /></td>
+        			<th class="ck">停车费差额(元)：</th>
+        			<td class="ck"><input value="{$charge_diff}" class="inp" type="text" name="" readonly="readonly" /></td>
+        			<th class="ck">储值卡扣款(元)：</th>
+        			<td class="ck"><input value="{$card_money}" class="inp" type="text" name="" readonly="readonly" /></td>
+        		</tr>
+        		<tr>
+        			<td colspan="8" class="wline"></td>
+        		</tr>
+        		<tr>
+        			<th class="ck">入场车辆数(辆)：</th>
+        			<td class="ck"><input value="{$entry_num}" class="inp" type="text" name="" readonly="readonly" /></td>
+        			<th class="ck">出场车辆数(辆)：</th>
+        			<td class="ck"><input value="{$exit_num}" class="inp" type="text" name="" readonly="readonly" /></td>
+        			<!--<th class="ck">手工入场数(辆)：</th>
+        			<td class="ck"><input value="{$man_entry_num}" class="inp" type="text" name="" readonly="readonly" /></td>
+        			<th class="ck">手工出场数(辆)：</th>
+        			<td class="ck"><input value="{$man_exit_num}" class="inp" type="text" name="" readonly="readonly" /></td>-->
+        		</tr>
+        		<tr>
+        			<th>收费车辆数(辆)：</th>
+        			<td><input value="{$charge_num}" class="inp" type="text" name="" readonly="readonly" /></td>
+        			<th>免费车辆数(辆)：</th>
+        			<td><input value="{$free_num}" class="inp" type="text" name="" readonly="readonly" /></td>
+        			<th>发生费用车数(辆)：</th>
+        			<td><input value="{$charge_num_all}" class="inp" type="text" name="" readonly="readonly" /></td>
+        			<th></th>
+        			<td></td>
+        		</tr>
+        		<tr>
+        			<th></th>
+        			<td height="80" colspan="7"><input name="" type="image" src="__PUBLIC__/images/jb.jpg" /> <a href="javascript:window.history.go(-1)" class="sbtn"><img src="__PUBLIC__/images/bjb.jpg" alt="" /></a></td>
+        		</tr>
+        	</table>
+        </form>
+		</div>
+    </div>   
+</body>
+</html>

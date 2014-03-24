@@ -1,0 +1,88 @@
+{include file="Public/page_header.html"}
+<script src="__PUBLIC__/js/My97DatePicker/WdatePicker.js"></script>
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="sub_nav" id="publish"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+     
+       <div class="query">
+        	<form id="user_form" class="user_form formular" method="get">
+		    	<select name="searchType">
+		    		<option value="code" {if $searchType == 'code'}selected="selected"{/if}>卡片内码</option>
+		    		<option value="add_time" {if $searchType == 'add_time'}selected="selected"{/if}>添加时间</option>
+		    		<option value="user_name" {if $searchType == 'user_name'}selected="selected"{/if}>操作员</option>
+		    	</select>
+		        <input name="keyword" type="text" value="{$keyword}" {if $searchType == 'add_time'} onClick="WdatePicker()" {/if}/>
+		        <input name="" type="image" src="__PUBLIC__/images/cx.jpg" />
+		        <a href="__URL__/modify"><img src="__PUBLIC__/images/zengjia.jpg" /></a>
+		        <a href="__URL__/addMulti"><img src="__PUBLIC__/images/plfx.jpg" /></a>
+        	</form>
+    	</div>
+        <div class="list_scroll">
+        
+         <div class="list_scroll">
+        <table border="0" cellspacing="0" cellpadding="0" class="list_table">
+          <tr class="title_t">
+            <th class="width_1">ID</td>
+            <th class="width_1">卡片内码</th>
+            <th class="width_1">卡片类别</th>
+            <th class="width_2">有效限期</th>
+            <th class="width_2">卡片余额</th>
+            <th class="width_1">车牌号码</th>
+            <th class="width_1">车主姓名</th>
+            <th class="width_1">操作员</th>
+            <th class="width_1">操作</th>
+          </tr>
+          {if !empty($data)}
+           {foreach from=$data item=d}
+          <tr>
+            <td>{$d.card_id}</td>
+            <td>{$d.code}</td>
+            <td>{$d.card_type}</td>
+            <td>{$d.expire_time}</td>
+            <td>{$d.money}</td>
+            <td>{$d.car_code}</td>
+            <td>{$d.name}</td>
+            <td>{$d.user_name}</td>
+            <td>
+            	{if $d.status_code!=2}<a href="__URL__/modify/id/{$d.issue_id}" class="cz_tag">修改</a>{/if}
+            	<!--<a href="__URL__/delete/id/{$d.card_id}" class="cz_tag ask-plain">删除</a>-->
+            </td>
+          </tr>
+          {/foreach}
+          {/if}
+        </table>
+		</div>
+		<div class="yema">
+			{if isset($paging)}
+				{$paging}
+			{/if}
+        </div>
+	</div>  
+</div>
+<script>
+{literal}
+jQuery(document).ready(function(){
+	// 按时间搜索时显示时间插件
+	$("select[name=searchType]").change(function(){
+		if($(this).val() == 'add_time')
+		{
+			$("input[name=keyword]").val('');
+			$("input[name=keyword]").addClass('Wdate');
+			$("input[name=keyword]").bind('click',function(){
+				WdatePicker();
+			});
+		}else{
+			$("input[name=keyword]").val('');
+			$("input[name=keyword]").removeClass('Wdate');
+			$("input[name=keyword]").unbind('click');
+		}
+	});
+});
+{/literal}
+</script>
+{include file="Public/page_footer.html"}

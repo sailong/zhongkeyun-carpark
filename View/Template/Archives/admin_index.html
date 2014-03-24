@@ -1,0 +1,51 @@
+{include file="Public/page_header.html"}
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+               {insert name="archives_nav" id="admin"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+     
+      <div class="query">
+        <a href="__URL__/modify"><img src="__PUBLIC__/images/zengjia.jpg" /></a>
+   	  </div>
+        <div class="list_scroll">
+        
+         <table width="94%" border="0" cellspacing="0" cellpadding="0" class="list_table">
+          <tr class="title_t">
+          	<th width="10%">编号</th>
+            <th width="20%">名称</td>
+            <th>权限组</th>
+            <th width="20%">操作</th>
+          </tr>
+           {foreach from=$data item=d}
+          <tr>
+            <td>{$d.admin_id}</td>
+            <td>{$d.admin_name}</td>
+            <td>{$d.group_name}</td>
+            <td><a href="__URL__/modify/id/{$d.admin_id}" class="cz_tag">修改</a> 
+            {if $d.admin_id neq 1}<a href="__URL__/delete/id/{$d.admin_id}" class="cz_tag ask-plain">删除</a>{/if}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+		</div>
+</div>  
+<script>
+{literal}
+jQuery(document).ready(function(){
+	$('.ask-plain').click(function(e) {			
+		e.preventDefault();
+		thisHref	= $(this).attr('href');
+		
+		if(confirm('确认删除此条信息吗？')) {
+			window.location = thisHref;
+		}
+		
+	});
+});
+{/literal}
+</script>
+{include file="Public/page_footer.html"}

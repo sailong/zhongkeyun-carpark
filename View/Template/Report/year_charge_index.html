@@ -1,0 +1,70 @@
+{include file="Public/page_header.html"}
+<script src="__PUBLIC__/js/My97DatePicker/WdatePicker.js"></script>
+
+    <div class="right_box">
+        {include file="Public/page_nav.html"}
+        <div class="nav">
+        	<ul>
+                {insert name="sub_nav" id="YearCharge"}
+            </ul>
+            <div class="clear"></div>
+        </div>
+        <div class="query">
+        	<div class="searchbox">
+        	<form id="user_form" class="user_form formular" method="get">
+        		<span class="searchtit">统计年份：</span>
+				<input type="text" size="24" class="Wdate" {literal}onfocus="WdatePicker({dateFmt:'yyyy',readOnly:true,maxDate:'%y'})"{/literal} name="date" id="date" value="{$date}"/>
+				操作员：<select name="admin_id" id="admin_id">
+						<option value="0">请选择操作员</option>
+						{foreach from=$adminList item=admin}
+							<option value="{$admin.admin_id}">{$admin.admin_name}</option>
+						{/foreach}
+					 </select>
+		        <input name="" type="image" src="__PUBLIC__/images/tijiao1.jpg" />
+		    </form>
+		    </div>
+    	</div>
+        <div class="list_scroll">
+        {if $list}
+        <table border="0" cellspacing="0" cellpadding="0" class="list_table">
+          <tr class="title_t">
+            <th class="width_0">月份</td>
+            <th class="width_0">卡发行收款</th>
+            <th class="width_0">卡延期收款</th>
+            <th class="width_0">卡充值收款</th>
+            <th class="width_0">卡更换收款</th>
+            <th class="width_0">卡回收退款</th>
+            <th class="width_0">卡人工出场收款</th>
+            <th class="width_0">储值卡扣款</th>
+            <th class="width_0">应收金额</th>
+            <th class="width_0">实收金额</th>
+          </tr>
+          {foreach from=$list item=val}
+	          <tr>
+	            <td>{$val.date}</td>
+	            <td>{$val.issue_charge}</td>
+	            <td>{$val.delay_charge}</td>
+	            <td>{$val.recharge}</td>
+	            <td>{$val.change_charge}</td>
+	            <td>{$val.return_money}</td>
+	            <td>{$val.man_charge}</td>
+	            <td>{$val.debit_charge}</td>
+	            <td>{$val.should_charge}</td>
+	            <td>{$val.real_charge}</td>
+	          </tr>
+          {/foreach}
+        </table>
+        {/if}
+</div>
+    </div>
+
+
+<script>
+var admin_id = '{$admin_id}';
+{literal}
+jQuery(document).ready(function(){
+	
+	$('#admin_id').val(admin_id);
+});
+{/literal}
+</script>
