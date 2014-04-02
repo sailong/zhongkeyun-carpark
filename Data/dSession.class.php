@@ -17,6 +17,7 @@ class dSession extends dBase {
 					'real_money',
 					'new_cate_id',//阶梯收费类型id,0时无阶梯收费,-1是期卡停车
 					'park_id',//停车车库
+					'park_status',//park_status为0时为进车库或者无车库默认状态，1时已经出库
 			)
 	);
 	public function _initialize() {

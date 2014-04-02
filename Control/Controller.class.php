@@ -126,7 +126,7 @@ abstract class Controller extends Action {
 			$c = array_pop($mCard->getCardByCode($card['code']));
 			$card['hasShare'] = $mCard->hasShareParking($c['card_id']);
 			$family_list = $mCard->getFamilyCardList($c['card_id']);
-			$park_str = '';
+			$park_str = $c['park'];
 			foreach ($family_list as $ca) {
 				$park_str .= ','.$ca['park'];
 			}
@@ -156,18 +156,14 @@ abstract class Controller extends Action {
 			{
 				alert('卡片信息写入控制器中。。。，请耐心等待！');
 				$.each(doorJson, function(index, content) {
-					controller_data='';
 					door_addr = parseInt(content.door_addr);
 					ip = content.door_ip;
-					ret =px.getControlInfo(content.door_addr,ip,port);
 					try{
-						ret = JSON.parse(ret);
-						controller_data = ret.Data;
 						$.each(card_info, function(index, card) {
 							var park = card.park.split(',');
 							if (card.code.indexOf('-') == -1 && ((parseInt(content.park_id) == 0) || (parseInt(content.park_id) > 0 && in_array(content.park_id, park) != -1))) {
 								//alert('--'+card.code+'--'+card.status+'--'+content.park_id+'has'+card.hasShare);
-								res = px.addOrModifyPrivilege(content.door_addr, ip, port, content.brake_no, card.code, card.start_time, card.end_time, card.status, 123456);
+								var res = px.addOrModifyPrivilege(content.door_addr, ip, port, content.brake_no, card.code, card.start_time, card.end_time, card.status, 123456);
 								res = JSON.parse(res);
 								if (res.ErrorCode != 0)
 								{
@@ -182,12 +178,7 @@ abstract class Controller extends Action {
 					} catch(e) {
 						alert(e);
 					}
-					if(ret.ErrorCode==0)
-					{
-						
-					} else {
-						alert('网络异常，请检查后刷新页面！');
-					}
+					
 					});
 				alert('卡片信息写入控制器成功！');
 			}

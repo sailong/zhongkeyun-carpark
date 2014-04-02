@@ -6,7 +6,7 @@ class mSendsms extends mBase {
 	public function sendSms($card_info,$action,$otherData = array())
 	{
 		$mobile = trim($card_info['tel']);
-		if(!$this->checkMobile($mobile)) return;
+		if(!$mobile) return;
 		//获取系统设置（是否需要发短信）
 		$settingModel = ClsFactory::Create('Model.mSetting');
 		$setting = $settingModel->getSettingInfo();
@@ -33,6 +33,10 @@ class mSendsms extends mBase {
 			$card_info['money'] = intval($card_info['money']);
 			$content = '尊敬的业主：您好！你现已充值%s元，余额为%s元。祝您生活愉快！回复TD退订此类信息。';
 			$content = sprintf($content,$otherData['charge'],$card_info['money']);
+		}elseif ($action == 4) //控制器异常发送短信
+		{
+			$content = $otherData['sms_content'];
+			$log['extra'] = $otherData['door_id'];
 		}
 		if($content)
 		{

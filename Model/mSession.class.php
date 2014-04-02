@@ -164,6 +164,7 @@ class mSession extends mBase {
 							if (!empty($park_id_str) && in_array($door_info['park_id'], explode(',', $park_id_str))) {
 								$session_info = array();
 								$session_info['park_id'] = $door_info['park_id'];
+								$session_info['park_status'] = 0;
 								$this->modifySessionInfo($session_info, $isSessionInfo['session_id']);
 								//return true;
 								return false;
@@ -176,6 +177,12 @@ class mSession extends mBase {
 					}
 				} else {
 					if ($hasShareParking) {
+						if ($isSessionInfo['park_id'] > 0) {
+							$session_info = array();
+							$session_info['park_status'] = 1;
+							$this->modifySessionInfo($session_info, $isSessionInfo['session_id']);
+						}
+						
 						return false;
 					}
 				}
@@ -237,7 +244,7 @@ class mSession extends mBase {
 					case 1:
 						{
 							$result = false;
-							break;
+							//break;//临时卡刷卡计费
 						}
 					//储值卡
 					case 2:
@@ -261,7 +268,7 @@ class mSession extends mBase {
 								}
 								
 							} elseif ($new_cate_id == 0) {	
-								if ($card_info['card_type'] == 2) {
+								if ($card_info['card_type'] == 2 || $card_info['card_type'] == 1) {
 									if ($lastSessionInfo && $session_info['end_time'] - $lastSessionInfo['start_time'] <= 24 * 3600) {
 										$session_info['charge'] = 0;
 									} else {
@@ -361,17 +368,24 @@ class mSession extends mBase {
 							if (!empty($park_id_str) && in_array($door_info['park_id'], explode(',', $park_id_str))) {
 								$session_info = array();
 								$session_info['park_id'] = $door_info['park_id'];
+								$session_info['park_status'] = 0;
 								$this->modifySessionInfo($session_info, $isSessionInfo['session_id']);
 								return false;
 							}
 						};
 					} else {
 						if ($card_info['park'] && in_array($door_info['park_id'], explode(',', $card_info['park']))) {
+							
 							return false;
 						}
 					}
 				} else {
 					if ($hasShareParking) {
+						if ($isSessionInfo['park_id'] > 0) {
+							$session_info = array();
+							$session_info['park_status'] = 1;
+							$this->modifySessionInfo($session_info, $isSessionInfo['session_id']);
+						}
 						return false;
 					}
 				}
@@ -549,7 +563,7 @@ class mSession extends mBase {
 		
 		$current_count = 0;
 		foreach ($session_list as $session) {
-			if (intval($session['park_id'])) {
+			if (intval($session['park_id']) && intval($session['park_status']) == 0) {
 				$current_count ++;
 			}
 		}
@@ -595,6 +609,24 @@ class mSession extends mBase {
 	}
 	
 	/**
+	 * 某卡的家庭在场车库停车场信息
+	 * @return mixed false没有在场车库停车信息，array返回该卡片的家庭卡片session信息
+	 *
+	 */
+	public function getFamilyParkSessionList($card_id) {
+		$session_list = $this->getFamilySessionList($card_id);
+		
+		$result = array();
+		foreach ($session_list as $session) {
+			if (intval($session['park_id']) && intval($session['park_status']) == 0) {
+				$result = $session;
+			}
+		}
+		
+		return count($result) ? $result : false;
+	}
+	
+	/**
 	 * 获取卡片收费信息
 	 * @return mixed false该卡片没有进入，array返回该卡片session收费信息
 	 *
@@ -629,7 +661,7 @@ class mSession extends mBase {
 				}
 			
 			} elseif ($new_cate_id == 0) {
-				if ($card_info['card_type'] == 2) {
+				if ($card_info['card_type'] == 2 || $card_info['card_type'] == 1) {
 					if ($lastSessionInfo && $isSessionInfo['end_time'] - $lastSessionInfo['start_time'] <= 24 * 3600) {
 						$money = 0;
 					} else {

@@ -444,28 +444,19 @@ class AjaxAction extends Controller {
 		{
 			$sessionModel = ClsFactory::Create('Model.mSession');
 			$_leftParkCounts = $sessionModel->getFamilyRemainParkingCount($cardId);
-			if($_leftParkCounts ==0 || $doorData['door_type'] == 1)
+			if($_leftParkCounts ==0 || ($doorData['door_type'] == 1 && $_leftParkCounts == 1 ))
 			{
 				$familyCardList = $cardModel->getFamilyCardList($cardId);
 				if(!$familyCardList) $this->returnData(0,'service no card list');
-				if($doorData['door_type'] == 1)
-				{
-					$data['cardList'] = $this->sortCard($familyCardList);
-					$this->returnData(1,'出',$data);
-				}
 				//获取在场的停车场信息
-				$session_list = $sessionModel->getFamilySessionList($cardId);
-				foreach ($session_list as $key=>$sess)
-				{
-					if($sess['park_id']==0) unset($session_list[$key]);
-				}
+				$session_list = $sessionModel->getFamilyParkSessionList($cardId);
 				$cardList = array();
 				foreach ($familyCardList as $card)
 				{
 					if(!isset($session_list[$card['card_id']])) $cardList[] = $card;
 				}
 				$data['cardList'] = $this->sortCard($cardList);
-				if($data) $this->returnData(1,'入',$data);
+				if($data) $this->returnData(1,'door_type:'.$doorData['door_type'],$data);
 			}
 		}
 		$this->returnData(0,'!share');

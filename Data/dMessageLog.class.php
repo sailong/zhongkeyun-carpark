@@ -13,6 +13,7 @@ class dMessageLog extends dBase {
 					'send_at',
 					'send_status',
 					'return_str',
+					'extra'
 			)
 	);
 	public function _initialize() {
@@ -26,6 +27,13 @@ class dMessageLog extends dBase {
 		$sql = "insert into ".$this->name." set $setsql";
 		$result = $this->execute ( $sql );
 		return $result ? $this->getLastInsID () : false;
+	}
+	
+	public function getLogByCond($cond) {
+		if($cond) $cond=' where '.$cond;
+		$list = $this->query ( "select * from ".$this->name." ".$cond );
+		if (! $list) return false;
+		return $list;
 	}
 	/**
 	 * 将对应的字段进行组合

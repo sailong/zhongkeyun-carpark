@@ -207,23 +207,14 @@ inputObj[1] = 'door_into_time';
 inputObj[2] = 'door_out_time';
 inputObj[3] = 'door_park_time';
 inputObj[4] = 'cate_id';
-inputObj[5] = 'shoud_money';
-inputObj[6] = 'real_money';
-inputObj[7] = 'door_car_owner';
+inputObj[5] = 'should_money';
+inputObj[6] = 'door_car_owner';
 function clearInput(sign)
 {
-	return;
 	for(i= 0;i <inputObj.length;i++)
     {
-        if ($('#'+inputObj[i]+sign).size()>0) $('#'+inputObj[i]+sign).val('');  
+        if ($('#'+inputObj[i]+sign).size()>0) $('#'+inputObj[i]+sign).html('');  
     }  
-	/*$('#door_code'+sign).val('');
-	$('#door_into_time'+sign).val('');
-	$('#door_out_time'+sign).val('');
-	$('#door_park_time'+sign).val('');
-	$('#cate_id'+sign).val('');  
-	$('#shoud_money'+sign).val('');
-	$('#real_money'+sign).val('');*/
 }
 
 

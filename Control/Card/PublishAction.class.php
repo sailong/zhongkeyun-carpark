@@ -150,8 +150,7 @@ class PublishAction extends CardController {
 					//--如果有共享车位-----------------------------------
 					if($data['address'] && $mCard->hasShareParking($id))
 					{
-						/* $update_card_arr = array();
-						//把其他的卡信息从控制器里删除
+						$update_card_arr = array();
 						$subCardList = $mCard->getFamilyCardList($id);
 						if($subCardList)
 						{
@@ -166,13 +165,14 @@ class PublishAction extends CardController {
 								$tempData['status'] = 1;
 								$tempData['park'] = $sub['park'];
 								$update_card_arr[] = $tempData;
-								$park_ids.=$sub['park'].',';
+								//$park_ids.=$sub['park'].',';
 							}
-							foreach ($update_card_arr as $key=>$u)
+							uasort($update_card_arr, create_function('$a, $b', 'if (intval($a["code"]) == intval($b["code"])) { return 0; } return (intval($a["code"]) < intval($b["code"])) ? -1 : 1;'));
+							/* foreach ($update_card_arr as $key=>$u)
 							{
 								$update_card_arr[$key]['park'] = $park_ids;
-							} 
-						} */
+							}  */
+						}
 					}
 					//---------------------------------------------------
 					//充值到主账户---------------------------

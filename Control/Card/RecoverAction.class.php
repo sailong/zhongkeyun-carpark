@@ -57,9 +57,11 @@ class RecoverAction extends CardController
 			}
 			if(isset($input['return_money'],$input['remark']))
 			{
+				$mCard = ClsFactory::Create('Model.mCard');
+				$hasShareParking = $mCard->hasShareParking($data['card_id']);
 				$param = array('card_id'=>$data['card_id'],'code'=>$code,'money'=>$data['money'],'return_money'=>$input['return_money'],'add_time'=>time(),'remark'=>trim($input['remark']));
 				if(ClsFactory::Create('Model.mRecoverLog')->addRecoverLog($param)) {
-					$mCard = ClsFactory::Create('Model.mCard');
+					
 					$card = array_pop($mCard->getCardById($data['card_id']));
 					$update_card_arr = $card_info = array();
 					
@@ -71,34 +73,30 @@ class RecoverAction extends CardController
 						$card_info['park'] = $data['park'];
 					
 						$update_card_arr[] = $card_info;
-						$shareParking = true;
-						//--如果没有共享车位-----------------------------------
-					/* 	if(!$mCard->hasShareParking($data['card_id']))
+						//--如果不符合共享车位-----------------------------------
+					 	if($hasShareParking && !$mCard->hasShareParking($data['card_id']))
 						{
-							$shareParking = false;
-							//把其他的卡信息写入控制器
+							//把其他的卡信息从控制器删除
 							$subCardList = $mCard->getFamilyCardList($data['card_id']);
 							if($subCardList)
 							{
 								$master_card_id = 0;
 								foreach ($subCardList as $sub)
 								{
-									$tempData = array();
-									
-									$tempData['code'] = $sub['code'];
-									$tempData['start_time'] = date('Y-m-d', time());
-									$tempData['end_time'] = $sub['card_type'] == 2 ? date('Y-m-d', time() + 5 * 60 * 60 * 24 * 30 * 12) : date('Y-m-d', $sub['expire_time']);
-									$tempData['status'] = 1;
-									$tempData['park'] = $sub['park'];
-									$update_card_arr[] = $tempData;
-									if($sub['is_master'])
+									if($sub['card_type']==2) 
 									{
-										$master_card_id = $sub['card_id'];
+										$tempData = array();
+										$tempData['code'] = $sub['code'];
+										$tempData['start_time'] = date('Y-m-d', time());
+										$tempData['end_time'] = $sub['card_type'] == 2 ? date('Y-m-d', time() + 5 * 60 * 60 * 24 * 30 * 12) : date('Y-m-d', $sub['expire_time']);
+										$tempData['status'] = 0;
+										$tempData['park'] = $sub['park'];
+										$update_card_arr[] = $tempData;
 									}
 								}
+								uasort($update_card_arr, create_function('$a, $b', 'if (intval($a["code"]) == intval($b["code"])) { return 0; } return (intval($a["code"]) < intval($b["code"])) ? -1 : 1;'));
 							}
-							
-						} */	
+						}	
 						//---------------------------------------------------
 					if ($data['is_master'])
 					{
@@ -110,8 +108,6 @@ class RecoverAction extends CardController
 							$this->showMessage(1,'回收成功,由于回收的是主账户卡片，需要重新设置主账户！跳转中......','/card/archive/index/b64/1/searchType/address/keyword/'.base64_encode($data['address']), 2, $update_card_arr);
 						}
 					}
-					
-					
 					$this->showMessage(1,'回收成功',__URL__ . '/index', 1, $update_card_arr);
 				}
 				else

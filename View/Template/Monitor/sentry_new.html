@@ -204,6 +204,10 @@ function checkSn()
 					}
 
 					var _id = '_'+door_addr+'_'+readerNumber;
+					if(!checkVariable(serviceReturnData.data.card_id))
+					{
+						clearInput(_id);
+					}
 					$('#door_code'+_id).html(cardId);
 					$('#door_real_code'+_id).val(cardId);
 					var is_open_door = true;

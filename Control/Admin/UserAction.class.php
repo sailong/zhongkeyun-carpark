@@ -110,7 +110,7 @@ class UserAction extends Controller {
 		$this->assign('charge_num', $charge_num);
 		$this->assign('free_num', $free_num);
 		
-		$session_list = $mSession->getSessionByCond('start_door_id in ('.implode(',', $door_ids).') and start_time >'.$admin_post['start_time'].' and start_time <'.$admin_post['end_time'].', start_time desc', 0, 99999);
+		//$session_list = $mSession->getSessionByCond('start_door_id in ('.implode(',', $door_ids).') and start_time >'.$admin_post['start_time'].' and start_time <'.$admin_post['end_time'].', start_time desc', 0, 99999);
 		$this->assign('entry_num', $session_list ? count($session_list) : 0);
 		$man_entry_num = 0;
 		foreach ($session_list as $session) {
